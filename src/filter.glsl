@@ -31,7 +31,7 @@ void main(void) {
 
     float thr = brightness > 4.0 * rand(uvs) ? 1.0 : 0.0;
 
-    gl_FragColor = vec4(vec3(thr), 1.0);
+    gl_FragColor = vec4(vec3(thr), color.a);
 
 
 }

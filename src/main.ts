@@ -1,4 +1,4 @@
-import { Application, Assets, Container, defaultFilterVert, DisplacementFilter, Filter, GlProgram, passthroughFrag, Sprite, TilingSprite, vertexGlTemplate } from 'pixi.js';
+import { Application, Assets, Container, defaultFilterVert, DisplacementFilter, Filter, GlProgram, Graphics, passthroughFrag, Sprite, TilingSprite, vertexGlTemplate } from 'pixi.js';
 import 'pixi.js/advanced-blend-modes';
 
 import noise from './assets/noise.png'
@@ -9,6 +9,7 @@ import filterFrag from './filter.glsl';
 import Them from './assets/chars/them.png';
 import Them2 from './assets/chars/them2.png';
 import Them3 from './assets/chars/them3.png';
+import nice from './assets/nice.jpg';
 
 import vertex from './passvert.glsl';
 
@@ -45,7 +46,8 @@ async function main() {
   const faceTextures = {
     x: await loadImageAsTexture(Them),
     y: await loadImageAsTexture(Them2),
-    z: await loadImageAsTexture(Them3)
+    z: await loadImageAsTexture(Them3),
+    a: await loadImageAsTexture(nice)
   }
 
   for (const [, texture] of Object.entries(faceTextures)) {
@@ -109,8 +111,8 @@ async function main() {
   app.stage.addChild(displacementSprite);
 
   const displacementFilter = new DisplacementFilter(displacementSprite);
-  displacementFilter.scale.x = 10;
-  displacementFilter.scale.y = 10;
+  displacementFilter.scale.x = 8;
+  displacementFilter.scale.y = 8;
 
   container.filters = [displacementFilter, customFilter];
 
@@ -121,6 +123,22 @@ async function main() {
     // noiseOverlay.width = app.screen.width;
     // noiseOverlay.height = app.screen.height;
   });
+
+  // this is dumb lol
+  const crystalBallCover = new Graphics()
+    .rect(0, 0, app.screen.width, app.screen.height)
+    .fill(0x000000)
+    .circle(app.screen.width / 2, app.screen.height / 2, container.height /2)
+    .cut()
+
+  const crystalBall = new Graphics()
+    .circle(app.screen.width / 2, app.screen.height / 2, container.height /2)
+    .stroke({width: 5, color: 0xffffff})
+    
+  
+    app.stage.addChild(crystalBallCover);
+    app.stage.addChild(crystalBall);
+    crystalBall.filters = [displacementFilter, customFilter]
 }
 
 main();
