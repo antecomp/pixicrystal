@@ -8,6 +8,7 @@ import { createNoiseTexture } from './noise';
 import initializeApp from './init';
 import createFacesContainer from './faces';
 import createCrystalBallOverlay from './ball';
+import { createMainFilter } from './filters';
 
 async function main() {
   const app = await initializeApp();
@@ -19,29 +20,10 @@ async function main() {
 
   (window as any)['yeah'] = face.changeTo;
 
-  const customFilter = new Filter({
-    glProgram: new GlProgram({
-      fragment: filterFrag,
-      vertex: vertex,
-    }),
-    resources: {
-      timeUniforms: {
-        uTime: { value: 0.0, type: 'f32' },
-        uDimensions: { value: [container.width, container.height], type: 'vec2<f32>' }
-      },
-    },
-  });
-
-  console.log(customFilter.resources.timeUniforms.uniforms.uDimensions);
-
-  // Apply the filter
-  //container.filters = [customFilter];
+  const customFilter = createMainFilter(app);
 
   // Update uniform
   app.ticker.add((ticker) => {
-    customFilter.resources.timeUniforms.uniforms.uTime += 0.04 * ticker.deltaTime;
-    // this is lazy, fix later.
-    customFilter.resources.timeUniforms.uniforms.uDimensions = [container.width, container.height]
     displacementSprite.x += 0.5;
     displacementSprite.y += 0.3;
   });

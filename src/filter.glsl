@@ -6,9 +6,6 @@ in vec4 vColor;
 uniform sampler2D uTexture;
 uniform float uTime;
 
-uniform vec4 filterArea;
-uniform vec2 uDimensions;
-
 float rand(vec2 co) {
     return fract(sin(dot(co.xy, vec2(12.9898, 78.233)) + uTime) * 43758.5453);
 }
