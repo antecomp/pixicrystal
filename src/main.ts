@@ -17,7 +17,8 @@ async function main() {
   face.centerContainer();
   face.changeTo('smile');
 
-  (window as any)['yeah'] = face.changeTo;
+  // 'this' is not closed over. Need to bind.
+  (window as any)['yeah'] = face.changeTo.bind(face);
 
   // Overlay
   const overlayLayer = new Container();
