@@ -22,9 +22,12 @@ async function main() {
   // Initialize the application
   await app.init({
     background: '#000000ff', resizeTo: window, useBackBuffer: true,
-    resolution: window.devicePixelRatio,
-    antialias: false, roundPixels: true
+    resolution: 1,
+    autoDensity: true,
+    antialias: false, roundPixels: true,
   });
+
+  app.canvas.style.imageRendering = 'pixelated'
 
   // Append the application canvas to the document body
   document.body.appendChild(app.canvas);
