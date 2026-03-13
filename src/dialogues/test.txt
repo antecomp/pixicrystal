@@ -1,0 +1,17 @@
+Hello, friend. <face:smile>
+How are you?
+{
+?: Doing well!
+    That is great to hear.
+?: Doing bad.
+    Sorry to hear that.
+    -> elsewhere
+?: Meh.
+    -> elsewhere
+}
+Fallback, we continue here.
+Then we keep going.
+
+@elsewhere
+We jumped here via goto.
+And continue from this tag.

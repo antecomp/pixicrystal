@@ -9,6 +9,7 @@ import { createCrossFadingTextDisplay } from './text';
 import createDialogueRunner from './dialogue';
 import compileDialogue, { traceCompiledDialogue } from './dialogue-parse/compileDialogue';
 
+import input from './dialogues/test.txt?raw'
 
 const CRYSTAL_BALL_RADIUS = 290;
 
@@ -55,26 +56,6 @@ async function main() {
     responseText.centerText(true, true, {x: 0, y: CRYSTAL_BALL_RADIUS / 1.5})
   });
 }
-
-const input = `
-Hello, friend. <face:smile>
-How are you?
-{
-?: Doing well!
-That is great to hear.
-?: Doing bad.
-Sorry to hear that.
--> elsewhere
-?: Meh.
--> elsewhere
-}
-Fallback, we continue here.
-Then we keep going.
-
-@elsewhere
-We jumped here via goto.
-And continue from this tag.
-`;
 
 const root = compileDialogue(input);
 traceCompiledDialogue(root);
