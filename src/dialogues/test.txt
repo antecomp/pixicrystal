@@ -1,13 +1,19 @@
 Hello, friend. <face:smile>
 How are you?
 {
-?: Doing well!
-    That is great to hear.
-?: Doing bad.
-    Sorry to hear that.
-    -> elsewhere
-?: Meh.
-    -> elsewhere
+    ?: Doing well!
+        That is great to hear.
+    ?: Doing bad.
+        Sorry to hear that.
+        -> elsewhere
+    ?: Meh.
+        -> elsewhere
+    ?: I won't tell
+    Why is that
+    {
+        ?: fuck you
+        Okay, be that way, punk.
+    }
 }
 Fallback, we continue here.
 Then we keep going.

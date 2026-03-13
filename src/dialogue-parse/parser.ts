@@ -16,16 +16,14 @@ export type ParsedOption = {
     next?: LinkedNode | null; // filled in by linker
 }
 
-// Change this type name later, it's confusing.
-export type ParsedTrueNode = {
+export type DialogueNodeData = {
     text: string;
     face?: string
     options?: ParsedOption[];
     next?: LinkedNode | null; // filled in by linker
 }
 
-// Change this type name later, it's confusing/
-export type ParsedNode = GotoPlaceholder | ParsedTrueNode;
+export type ParsedNode = GotoPlaceholder | DialogueNodeData;
 
 // Final linked node shape, matching DialogueNode. Likely redundant but
 // will keep it this way just in case I do any additional parsing passes on the node content itself.
@@ -48,8 +46,8 @@ type SequenceResult = {
 type OptionsResult = { options: ParsedOption[]; endIndex: number };
 
 // Lazy, but good enough lol. I don't want to make a grammar for like 2 special notations in a text line type.
-function parseTextLine(line: string): ParsedTrueNode {
-    const faceRgx = /\<face:.*?\>/g
+function parseTextLine(line: string): DialogueNodeData {
+    const faceRgx = /\<face:.+?\>/
     const faceMatches = (line.match(faceRgx) ?? []).map(match => match.replace(/\<face:|\>/g, ''));
     return { text: line.replace(faceRgx, '').trim(), face: faceMatches[0] }
 }
