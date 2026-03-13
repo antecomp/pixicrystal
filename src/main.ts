@@ -35,7 +35,8 @@ async function main() {
   face.container.filters = [displacementFilter, noiseFilter];
 
   const crystalBall = createCrystalBallOverlay(app, CRYSTAL_BALL_RADIUS);
-  crystalBall.ball.filters = [displacementFilter, noiseFilter]
+  crystalBall.ball.filters = [displacementFilter, noiseFilter];
+  crystalBall.ball.on('pointertap', () => console.log('trigger'))
 
   const responseText = createCrossFadingTextDisplay(app, TEXT_STYLE, true);
   responseText.changeText("Initial Text");

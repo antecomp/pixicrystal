@@ -1,4 +1,4 @@
-import { Application, Graphics } from "pixi.js";
+import { Application, Circle, Graphics } from "pixi.js";
 
 export default function createCrystalBallOverlay(app: Application, initialRadius: number) {
     const cover = new Graphics();
@@ -19,8 +19,14 @@ export default function createCrystalBallOverlay(app: Application, initialRadius
 
         ball
             .clear()
-            .circle(cx, cy, radius)
+            .circle(0, 0, radius)
             .stroke({width: 5, color: 0xffffff});
+
+        ball.position.set(cx, cy);
+
+        ball.eventMode = 'static';
+        ball.cursor = 'pointer';
+        ball.hitArea = new Circle(0, 0, radius);
     }
 
     function destroy() {
