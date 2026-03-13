@@ -1,4 +1,4 @@
-import { Application, Container, Graphics, TextStyle, Text } from "pixi.js";
+import { Application, Container, Graphics, TextStyle, Text, CanvasTextMetrics } from "pixi.js";
 
 function createTextWithBackground(value: string, style: TextStyle, center: boolean) {
     const wrapper = new Container();
@@ -6,14 +6,20 @@ function createTextWithBackground(value: string, style: TextStyle, center: boole
 
     if (center) text.anchor.set(0.5);
 
+    // text.width inherits from the wordWrapWidth, not the rendered width.
+    // instead, we use this method to get the true rendered dimensions.
+    const metrics = CanvasTextMetrics.measureText(value, style);
+    const renderedWidth = metrics.maxLineWidth;
+    const renderedHeight = metrics.height
+
     const padX = 12;
     const padY = 6;
     const background = new Graphics();
-    background.roundRect(0, 0, text.width + (padX * 2), text.height + (padY * 2), 40);
+    background.roundRect(0, 0, renderedWidth + (padX * 2), renderedHeight + (padY * 2), 40);
     background.fill({ color: 0x000000, alpha: 0.9 });
 
     if (center) {
-        background.position.set((-text.width / 2) - padX, (-text.height / 2) - padY);
+        background.position.set((-renderedWidth / 2) - padX, (-renderedHeight / 2) - padY);
     } else {
         text.position.set(padX, padY);
     }
