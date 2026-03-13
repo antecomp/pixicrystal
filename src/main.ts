@@ -7,14 +7,17 @@ import { createDisplacementFilter, createNoiseFilter } from './filters';
 import { TextStyle } from 'pixi.js';
 import { createCrossFadingTextDisplay } from './text';
 
-const TEXT_STYLE = new TextStyle({
-    fontFamily: ['Georgia', 'serif'],
-    fontSize: 32,
-    fill: 0xffffff,
-    align: 'center',
-});
 
 const CRYSTAL_BALL_RADIUS = 290;
+
+const TEXT_STYLE = new TextStyle({
+    fontFamily: ['Georgia', 'serif'],
+    fontSize: 28,
+    fill: 0xffffff,
+    align: 'center',
+    wordWrap: true,
+    wordWrapWidth: CRYSTAL_BALL_RADIUS * 1.25
+});
 
 async function main() {
   const app = await initializeApp();
@@ -37,14 +40,14 @@ async function main() {
   const responseText = createCrossFadingTextDisplay(app, TEXT_STYLE, true);
   responseText.changeText("Initial Text");
   setTimeout(() => responseText.changeText("Jeg tilintetgjør haterne mine ved å bli venn med dem."), 2000);
-  responseText.centerText(true, true, {x: 0, y: -CRYSTAL_BALL_RADIUS - TEXT_STYLE.fontSize});
+  responseText.centerText(true, true, {x: 0, y: CRYSTAL_BALL_RADIUS / 1.5});
 
   responseText.container.filters = [noiseFilter]
 
   app.renderer.on('resize', () => {
     face.centerContainer();
     crystalBall.redraw();
-    responseText.centerText(true, true, {x: 0, y: -CRYSTAL_BALL_RADIUS - TEXT_STYLE.fontSize})
+    responseText.centerText(true, true, {x: 0, y: CRYSTAL_BALL_RADIUS / 1.5})
   });
 }
 
