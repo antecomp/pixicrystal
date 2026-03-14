@@ -9,7 +9,7 @@ import { createCrossFadingTextDisplay } from './text';
 import createDialogueRunner, { DialogueNode } from './dialogue';
 import compileDialogue, { traceCompiledDialogue } from './dialogue-parse/compileDialogue';
 
-import input from './dialogues/test.txt?raw'
+import input from './dialogues/test.bny?raw'
 
 const CRYSTAL_BALL_RADIUS = 290;
 
