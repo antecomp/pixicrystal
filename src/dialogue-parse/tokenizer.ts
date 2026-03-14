@@ -25,6 +25,11 @@ export default function tokenize(raw: string) {
 
         if (line.startsWith('#')) continue; // Comments.
 
+        const hasInlineBlockOpen = line !== '{' && line.endsWith('{');
+        if (hasInlineBlockOpen) {
+            line = line.slice(0, -1).trimEnd();
+        }
+
         if (line === '{') {
             tokens.push({ type: 'BLOCK_OPEN' });
         }
@@ -40,26 +45,16 @@ export default function tokenize(raw: string) {
             tokens.push({ type: 'LABEL', label });
         }
         else if (line.startsWith('?:')) {
-            let text = line.slice(2).trim();
-            if (text.endsWith('{')) {
-                text = text.slice(0, -1);
-                tokens.push({ type: 'OPTION', text });
-                tokens.push({type: 'BLOCK_OPEN'});
-            } else {
-                tokens.push({ type: 'OPTION', text });
-            }
-
+            const text = line.slice(2).trim();
+            tokens.push({ type: 'OPTION', text });
         } else {
-            if (line.endsWith('{')) {
-                line = line.slice(0, -1);
-                tokens.push({ type: 'TEXT', text: line })
-                tokens.push({ type: 'BLOCK_OPEN' })
-            } else {
-                tokens.push({ type: 'TEXT', text: line })
-            }
+            tokens.push({ type: 'TEXT', text: line })
+        }
 
+        if (hasInlineBlockOpen) {
+            tokens.push({ type: 'BLOCK_OPEN' });
         }
     }
 
     return tokens;
-} 
+}
