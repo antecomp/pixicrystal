@@ -98,7 +98,7 @@ export function parseSequence(tokens: Token[], i: number): SequenceResult {
 
             // Peek ahead: if the very next token is a BLOCK_OPEN, this node owns that options block.
             if (tokens[i + 1]?.type === 'BLOCK_OPEN') {
-                const { options, endIndex, labels: optionLabels } = parseOptions(tokens, i + 2); // Skip the {
+                const { options, endIndex, labels: optionLabels } = parseOptions(tokens, i + 2, node.text); // Skip the {
                 node.options = options;
                 Object.assign(labels, optionLabels);
                 i = endIndex; // endIndex points just past the closing }
@@ -107,7 +107,11 @@ export function parseSequence(tokens: Token[], i: number): SequenceResult {
             }
 
             nodes.push(node);
+            continue;
         }
+
+        // Defensive skip: consume unexpected tokens to avoid infinite loops.
+        i++;
     }
 
     return { nodes, endIndex: i, labels }
@@ -115,7 +119,7 @@ export function parseSequence(tokens: Token[], i: number): SequenceResult {
 
 // Reads the inside of a { block }, collecting each ?: branch and its associated sequence.
 // Returns an array of option objects and the index just past the closing } (to be used by parseSequence above)
-function parseOptions(tokens: Token[], i: number): OptionsResult {
+function parseOptions(tokens: Token[], i: number, ownerPrompt: string): OptionsResult {
     const options: ParsedOption[] = [];
     const labels: Record<string, ParsedNode> = {};
 
@@ -130,6 +134,37 @@ function parseOptions(tokens: Token[], i: number): OptionsResult {
         if (tok.type === 'OPTION') {
             const optionText = tok.text;
             i++; // consume ?:
+
+            // Support chained options where an option immediately opens another option block.
+            // We synthesize a question node that reuses the parent prompt text.
+            if (tokens[i]?.type === 'BLOCK_OPEN') {
+                const {
+                    options: nestedOptions,
+                    endIndex: nestedEnd,
+                    labels: nestedLabels
+                } = parseOptions(tokens, i + 1, ownerPrompt);
+                Object.assign(labels, nestedLabels);
+                i = nestedEnd;
+
+                const syntheticQuestionNode: DialogueNodeData = {
+                    text: ownerPrompt,
+                    options: nestedOptions
+                };
+
+                const {
+                    nodes: tailNodes,
+                    endIndex: tailEnd,
+                    labels: tailLabels
+                } = parseSequence(tokens, i);
+                Object.assign(labels, tailLabels);
+                i = tailEnd;
+
+                options.push({
+                    text: optionText,
+                    nodes: [syntheticQuestionNode, ...tailNodes]
+                });
+                continue;
+            }
 
             // Parse whatever follows this option until the next OPTION or BLOCK_CLOSE.
             const { nodes, endIndex, labels: optionLabels } = parseSequence(tokens, i);

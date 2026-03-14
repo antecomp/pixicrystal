@@ -11,14 +11,38 @@ How are you?
     ?: Meh.
         -> elsewhere
     ?: I won't tell
-    Why is that
+        Why is that
+        {
+            ?: fuck you
+            Okay, be that way, punk.
+            ?: Just kidding, im good
+            -> test
+        }
+        This should be an inner fallback.
+
+    ?: Can a fallback be a goto?
+        I am going mad <face:weary>
+        {
+            ?: Let us find out
+            Yes, lets
+        }
+        -> skipelsewhere
+    ?: Question with no response
+
+    ?: Question chain (inherit prompt from parent)
     {
-        ?: fuck you
-        Okay, be that way, punk.
-        ?: Just kidding, im good
-        -> test
+        ?: Followup question
+            Followup answer
+        ?: Other followup question
+            Followup answer 2
+        ?: How deep can we go?
+        {
+            ?: Oh shit
+                Oh shit is right this is terrible
+                -> skipelsewhere
+            ?: It just keeps going
+        }
     }
-    This should be an inner fallback.
 }
 Fallback, we continue here.
 Then we keep going.
