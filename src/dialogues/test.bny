@@ -20,8 +20,7 @@ How are you? {
         This should be an inner fallback.
 
     ?: Can a fallback be a goto?
-        I am going mad <face:weary>
-        {
+        I am going mad <face:weary> {
             ?: Let us find out
             Yes, lets
         }
@@ -31,8 +30,7 @@ How are you? {
     ?: Question with no response
     
     # Automatically generates a new node with same text as parent of this question.
-    ?: Question chain (inherit prompt from parent)
-    {
+    ?: Question chain (inherit prompt from parent) {
         ?: Followup question
             Followup answer
         ?: Other followup question

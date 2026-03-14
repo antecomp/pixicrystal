@@ -40,15 +40,24 @@ export default function tokenize(raw: string) {
             tokens.push({ type: 'LABEL', label });
         }
         else if (line.startsWith('?:')) {
-            const text = line.slice(2).trim();
-            tokens.push({ type: 'OPTION', text });
+            let text = line.slice(2).trim();
+            if (text.endsWith('{')) {
+                text = text.slice(0, -1);
+                tokens.push({ type: 'OPTION', text });
+                tokens.push({type: 'BLOCK_OPEN'});
+            } else {
+                tokens.push({ type: 'OPTION', text });
+            }
+
         } else {
             if (line.endsWith('{')) {
                 line = line.slice(0, -1);
                 tokens.push({ type: 'TEXT', text: line })
                 tokens.push({ type: 'BLOCK_OPEN' })
+            } else {
+                tokens.push({ type: 'TEXT', text: line })
             }
-            tokens.push({ type: 'TEXT', text: line })
+
         }
     }
 
