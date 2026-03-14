@@ -1,8 +1,7 @@
 # This is a comment
 @start
 Hello, friend. <face:smile>
-How are you?
-{
+How are you? {
     ?: Doing well!
         @doingwell
         That is great to hear. <face:pleased>
@@ -12,8 +11,7 @@ How are you?
     ?: Meh.
         -> elsewhere
     ?: I won't tell
-        Why is that
-        {
+        Why is that? {
             ?: I do not like you.
             Okay, be that way, punk. <face:weary>
             ?: Just kidding, im good

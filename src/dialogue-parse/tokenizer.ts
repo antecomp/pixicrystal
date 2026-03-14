@@ -23,27 +23,32 @@ export default function tokenize(raw: string) {
         line = line.trim();
         if (!line) continue; // Skip line breaks.
 
-        if(line.startsWith('#')) continue; // Comments.
+        if (line.startsWith('#')) continue; // Comments.
 
         if (line === '{') {
-            tokens.push({type: 'BLOCK_OPEN'});
+            tokens.push({ type: 'BLOCK_OPEN' });
         }
-        else if(line === '}') {
-            tokens.push({type: 'BLOCK_CLOSE'});
+        else if (line === '}') {
+            tokens.push({ type: 'BLOCK_CLOSE' });
         }
-        else if(line.startsWith('->')) {
+        else if (line.startsWith('->')) {
             const label = line.slice(2).trim();
-            tokens.push({type: 'GOTO', label});
+            tokens.push({ type: 'GOTO', label });
         }
-        else if(line.startsWith('@')) {
+        else if (line.startsWith('@')) {
             const label = line.slice(1).trim();
-            tokens.push({type: 'LABEL', label});
+            tokens.push({ type: 'LABEL', label });
         }
-        else if(line.startsWith('?:')) {
+        else if (line.startsWith('?:')) {
             const text = line.slice(2).trim();
-            tokens.push({type: 'OPTION', text});
+            tokens.push({ type: 'OPTION', text });
         } else {
-            tokens.push({type: 'TEXT', text: line})
+            if (line.endsWith('{')) {
+                line = line.slice(0, -1);
+                tokens.push({ type: 'TEXT', text: line })
+                tokens.push({ type: 'BLOCK_OPEN' })
+            }
+            tokens.push({ type: 'TEXT', text: line })
         }
     }
 
