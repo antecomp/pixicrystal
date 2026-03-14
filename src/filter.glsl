@@ -16,9 +16,9 @@ void main(void) {
     vec4 color = texture2D(uTexture, uvs);
     float brightness = dot(color.rgb, vec3(0.299, 0.587, 0.114));
 
-    color.r = uvs.y + sin(uTime);
+    //color.r = uvs.y + sin(uTime);
 
-    gl_FragColor = color;
+    //gl_FragColor = color;
 
     // if((uvs.y * uDimensions.y) > 1.0) {
     //     gl_FragColor = vec4(rand(uvs));

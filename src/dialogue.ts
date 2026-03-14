@@ -30,12 +30,12 @@ export const TEST_DIALOGUE: DialogueNode = {
     }
 }
 
-export default function createDialogueRunner(root: DialogueNode = TEST_DIALOGUE, deps: {changeFace: FaceChangeFn, changeText: ChangeTextFn}) {
+export default function createDialogueRunner(root: DialogueNode = TEST_DIALOGUE, deps: { changeFace: FaceChangeFn, changeText: ChangeTextFn }) {
     // TODO: Utilize promises returned by the change methods to block interaction until ready.
 
     let current = root;
 
-    if(root.face) deps.changeFace(root.face);
+    if (root.face) deps.changeFace(root.face);
     deps.changeText(root.text);
 
     function proceed() {
@@ -43,17 +43,29 @@ export default function createDialogueRunner(root: DialogueNode = TEST_DIALOGUE,
             current = current.next;
             if (current.face) deps.changeFace(current.face);
             deps.changeText(current.text);
-            return;
+            //return;
 
             // TODO: Display options if navigated-into node has them.
+            // should fall through into the other current
         }
 
         if ('options' in current) {
-            // Node has options: selection must be handled externally; do nothing here.
-            return;
+            // have this function return the option handlers.
+            return current.options.map(option => ({
+                run: () => {
+                    // Todo: clean this up to reduce code duplication
+                    if ('next' in option) {
+                        current = option.next;
+                        if (current.face) deps.changeFace(current.face);
+                        deps.changeText(current.text)
+                    }
+                },
+                text: option.text
+            })
+            )
         }
     }
 
-    return {proceed}
+    return { proceed }
 
 }
