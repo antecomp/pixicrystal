@@ -43,20 +43,23 @@ async function main() {
   const responseText = createCrossFadingTextDisplay(app, TEXT_STYLE, true);
 
   const dialogueRunner = createDialogueRunner(root as DialogueNode, { changeFace: face.changeTo, changeText: responseText.changeText });
+  const buttonContainer = document.querySelector('#test_button_con')!;
 
-  // Gross - update this.
+  function renderOptions(optionData?: ReturnType<typeof dialogueRunner.proceed>) {
+    buttonContainer.innerHTML = "";
+
+    if (!optionData) return;
+
+    optionData.forEach((op) => {
+      const btn = document.createElement('button');
+      btn.onclick = () => renderOptions(op.run());
+      btn.textContent = op.text;
+      buttonContainer.appendChild(btn);
+    });
+  }
+
   crystalBall.ball.on('pointertap', () => {
-    const optionData = dialogueRunner.proceed();
-    const bc = document.querySelector('#test_button_con')!;
-    bc.innerHTML = "";
-    if (optionData) {
-      optionData.forEach((op, i) => {
-        const btn = document.createElement('button');
-        btn.onclick = () => {op.run(); bc.innerHTML = ""};
-        btn.textContent = op.text;
-        bc.appendChild(btn);
-      })
-    }
+    renderOptions(dialogueRunner.proceed());
   });
 
   responseText.centerText(true, true, { x: 0, y: CRYSTAL_BALL_RADIUS / 1.5 });

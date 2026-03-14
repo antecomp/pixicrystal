@@ -35,35 +35,35 @@ export default function createDialogueRunner(root: DialogueNode = TEST_DIALOGUE,
 
     let current = root;
 
-    if (root.face) deps.changeFace(root.face);
-    deps.changeText(root.text);
+    function renderCurrent() {
+        if (current.face) deps.changeFace(current.face);
+        deps.changeText(current.text);
+    }
+
+    function getCurrentOptions() {
+        if (!('options' in current)) return;
+
+        return current.options.map(option => ({
+            run: () => moveTo(option.next),
+            text: option.text
+        }));
+    }
+
+    function moveTo(node: DialogueNode) {
+        current = node;
+        renderCurrent();
+
+        return getCurrentOptions();
+    }
+
+    renderCurrent();
 
     function proceed() {
         if ('next' in current && current.next) {
-            current = current.next;
-            if (current.face) deps.changeFace(current.face);
-            deps.changeText(current.text);
-            //return;
-
-            // TODO: Display options if navigated-into node has them.
-            // should fall through into the other current
+            return moveTo(current.next);
         }
 
-        if ('options' in current) {
-            // have this function return the option handlers.
-            return current.options.map(option => ({
-                run: () => {
-                    // Todo: clean this up to reduce code duplication
-                    if ('next' in option) {
-                        current = option.next;
-                        if (current.face) deps.changeFace(current.face);
-                        deps.changeText(current.text)
-                    }
-                },
-                text: option.text
-            })
-            )
-        }
+        return getCurrentOptions();
     }
 
     return { proceed }

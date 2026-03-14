@@ -11,6 +11,15 @@ function isGoto(node: ParsedNode): node is GotoPlaceholder {
     return '_goto' in node;
 }
 
+function resolveLinkedNode(
+    node: ParsedNode | null | undefined,
+    labelMap: LabelMap
+): LinkedNode | null {
+    if (!node) return null;
+    if (isGoto(node)) return node._resolvedTarget ?? labelMap[node._goto] ?? null;
+    return node as LinkedNode;
+}
+
 // Follows a goto placeholder to its resolved target, or returns the node as-is.
 export function resolveNext(
     node: ParsedNode | null | undefined,
@@ -49,7 +58,7 @@ export function linkNodes(
         const node = nodes[i];
 
         const nextNode = 
-            resolveNext(nodes[i+1]) // Have a following node in the same sequence.
+            resolveLinkedNode(nodes[i+1], labelMap) // Have a following node in the same sequence.
             ?? fallthrough          // End of sequence, is there a fallthrough?
             ?? null;                // Truly at the end of the dialogue.
 

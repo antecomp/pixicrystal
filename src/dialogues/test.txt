@@ -1,3 +1,4 @@
+@start
 Hello, friend. <face:smile>
 How are you?
 {
@@ -21,3 +22,6 @@ Then we keep going.
 @elsewhere
 We jumped here via goto.
 And continue from this tag.
+
+Hopefully my dialogue system loops here
+-> start
