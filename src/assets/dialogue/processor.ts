@@ -2,7 +2,7 @@
 // UnlinkedNodes track connections with IDs, that will then be converted into proper DialogueNodes and linked later.
 
 import { generateId } from "./genid";
-import { NodeTree, OptionTree, TextTree } from "./visitor";
+import { GotoTree, NodeTree, OptionTree, TextTree } from "./visitor";
 
 type NodeRef =
     | { kind: 'id'; value: string }  // resolved node reference
@@ -27,7 +27,10 @@ export function flatten(tree: NodeTree[]): FlattenResult {
     const nodes: UnlinkedNode[] = [];
     const labels: Record<string, string> = {};
 
-    flattenSequence(tree, null, nodes, labels);
+    const gotoOverride = flattenSequence(tree, null, nodes, labels);
+    if(gotoOverride && nodes.length > 0) {
+        nodes[nodes.length -1].next = gotoOverride;
+    }
 
     // Second pass — resolve label refs to id refs
     for (const node of nodes) {
@@ -56,22 +59,17 @@ function labelRef(value: string): NodeRef {
     return { kind: 'label', value };
 }
 
+// Returns a goto override if the sequence ends with one, so it can be properly applied.
 function flattenSequence(
     sequence: NodeTree[],
     fallback: NodeRef | null,
     nodes: UnlinkedNode[],
     labels: Record<string, string>
-): void {
+): NodeRef | null {
     for (let i = 0; i < sequence.length; i++) {
         const node = sequence[i];
 
-        if (node.kind === 'goto') {
-            // Attach label ref to previous node and discard
-            if (nodes.length > 0) {
-                nodes[nodes.length - 1].next = labelRef(node.target);
-            }
-            continue;
-        }
+        if (node.kind === 'goto') continue; // handled below.
 
         const nextRef = findNextRef(sequence, i) ?? fallback;
 
@@ -91,6 +89,10 @@ function flattenSequence(
 
         nodes.push(unlinked);
     }
+
+    // If sequence ends with a goto, return it as an override for the caller.
+    const last = sequence[sequence.length - 1];
+    return last?.kind === 'goto' ? labelRef(last.target) : null;
 }
 
 function flattenBlock(
@@ -115,8 +117,11 @@ function flattenBlock(
         }
 
         const firstNode = option.branch.find(n => n.kind === 'text') as TextTree | undefined;
-        const firstRef = firstNode ? idRef(firstNode.id) : fallback;
-        flattenSequence(option.branch, fallback, nodes, labels);
+        const gotoOverride = flattenSequence(option.branch, fallback, nodes, labels);
+
+        // Either attach the node that starts the subsequence under the question
+        // or, if we immediately hit a goto, use that instead. Finally, try attaching fallback.
+        const firstRef = firstNode ? idRef(firstNode.id) : (gotoOverride ?? fallback);
 
         return { text: option.text, next: firstRef };
     });
@@ -126,6 +131,7 @@ function flattenBlock(
 function findNextRef(sequence: NodeTree[], i: number): NodeRef | null {
     for (let j = i + 1; j < sequence.length; j++) {
         if (sequence[j].kind === 'text') return idRef((sequence[j] as TextTree).id);
+        if(sequence[j].kind === 'goto') return labelRef((sequence[j] as GotoTree).target)
     }
     return null;
 }
