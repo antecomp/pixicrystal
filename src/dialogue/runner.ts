@@ -1,5 +1,5 @@
-import { AvailableFace, FaceChangeFn } from "./faces"
-import { ChangeTextFn } from "./text";
+import { AvailableFace, FaceChangeFn } from "../faces";
+import { ChangeTextFn } from "../text";
 
 export type DialogueNode = {
     text: string,

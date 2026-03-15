@@ -1,4 +1,4 @@
-import { DialogueNode } from "../../dialogue";
+import { DialogueNode } from "./runner";
 import { AvailableFace } from "../../faces";
 import { FlattenResult } from "./processor";
 
