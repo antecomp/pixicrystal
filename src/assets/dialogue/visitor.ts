@@ -75,7 +75,8 @@ export class DialogueVisitor extends BaseVisitor {
     choice(ctx: any): OptionTree {
         const text = ctx.Text[0].image.trim();
 
-        // Chained block case: ?: text { — no statements, just a nested block
+        // Chained block case: ?: text {    no statements, just a nested block
+        // will generate interspersed node later.
         if (ctx.optionBlock && (!ctx.statement || ctx.statement.length === 0)) {
             return {
                 text,

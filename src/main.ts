@@ -14,6 +14,7 @@ import { DialogueParser } from './assets/dialogue/parser';
 import { DialogueLexer } from './assets/dialogue/lexer';
 
 import test from './assets/dialogue/test';
+import { compileBnyDialogue } from './assets/dialogue/compilebny';
 
 test();
 
@@ -79,7 +80,7 @@ async function main() {
   });
 }
 
-const root = compileDialogue(input);
+const root = compileBnyDialogue(input);
 //traceCompiledDialogue(root);
 
 
