@@ -46,20 +46,6 @@ async function main() {
   const responseText = createCrossFadingTextDisplay(app, TEXT_STYLE, true);
 
   const dialogueRunner = createDialogueRunner(root as DialogueNode, { changeFace: face.changeTo, changeText: responseText.changeText });
-  //const buttonContainer = document.querySelector('#test_button_con')!;
-
-  // function renderOptions(optionData?: ReturnType<typeof dialogueRunner.proceed>) {
-  //   buttonContainer.innerHTML = "";
-
-  //   if (!optionData) return;
-
-  //   optionData.forEach((op) => {
-  //     const btn = document.createElement('button');
-  //     btn.onclick = () => renderOptions(op.run());
-  //     btn.textContent = op.text;
-  //     buttonContainer.appendChild(btn);
-  //   });
-  // }
 
   const optionsOverlay = createOptionsOverlay(app, CRYSTAL_BALL_RADIUS);
   optionsOverlay.con.filters = [noiseFilter]
