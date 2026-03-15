@@ -1,8 +1,8 @@
-import { Application, Container, Graphics, TextStyle, Text, CanvasTextMetrics } from "pixi.js";
+import { Application, Container, Graphics, TextStyle, Text, CanvasTextMetrics, Rectangle } from "pixi.js";
 
 export type ChangeTextFn = (value: string, duration?: number) => Promise<void>
 
-function createTextWithBackground(value: string, style: TextStyle, center: boolean) {
+export function createTextWithBackground(value: string, style: TextStyle, center: boolean) {
     const wrapper = new Container();
     const text = new Text({ text: value, style });
 
@@ -25,6 +25,13 @@ function createTextWithBackground(value: string, style: TextStyle, center: boole
     } else {
         text.position.set(padX, padY);
     }
+
+    wrapper.hitArea = new Rectangle(
+        (-renderedWidth / 2) - padX,
+        (-renderedHeight / 2) - padY,
+        renderedWidth + (padX * 2),
+        renderedHeight + (padY * 2)
+    );
 
     wrapper.addChild(background);
     wrapper.addChild(text);
@@ -75,7 +82,7 @@ export function createCrossFadingTextDisplay(app: Application, style: TextStyle,
 
     function centerText(horizontal = true, vertical = true, offset?: { x: number, y: number }) {
         if (horizontal) container.x = (app.screen.width / 2) + (offset?.x ?? 0);
-        if (vertical)   container.y = (app.screen.height / 2) + (offset?.y ?? 0);
+        if (vertical) container.y = (app.screen.height / 2) + (offset?.y ?? 0);
     }
 
     return { container, changeText, centerText }

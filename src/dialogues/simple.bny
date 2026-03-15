@@ -1,0 +1,28 @@
+@start
+Hey, <face:smile>
+How are you? {
+    ?: Doing well!
+        That is great to hear. <face:pleased>
+    ?: Not great.
+        Sorry to hear that. <face:weary>
+        -> elsewhere
+    ?: Been better
+        Better than bad! <face:smile>
+        -> elsewhere
+    ?: I won't say
+        Why is that? {
+            ?: Don't feel like it!
+                Verywell...
+            ?: I don't know you!
+                You will!
+        }
+}
+-> wrapup
+
+@elsewhere
+If you ever want to talk about it,
+Do not hesitate to.
+
+@wrapup
+Well thats it for this test... <face:weary>
+-> start

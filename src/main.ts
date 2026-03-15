@@ -7,15 +7,16 @@ import { createDisplacementFilter, createNoiseFilter } from './filters';
 import { TextStyle } from 'pixi.js';
 import { createCrossFadingTextDisplay } from './text';
 
-import input from './dialogues/test.bny?raw'
+import input from './dialogues/simple.bny?raw'
 import { compileBnyDialogue } from './dialogue/compilebny';
 import createDialogueRunner from './dialogue/runner';
 import { DialogueNode } from "./dialogue/types";
+import createOptionsOverlay from './options';
 
 
 const CRYSTAL_BALL_RADIUS = 290;
 
-const TEXT_STYLE = new TextStyle({
+export const TEXT_STYLE = new TextStyle({
   fontFamily: ['Georgia', 'serif'],
   fontSize: 28,
   fill: 0xffffff,
@@ -45,23 +46,26 @@ async function main() {
   const responseText = createCrossFadingTextDisplay(app, TEXT_STYLE, true);
 
   const dialogueRunner = createDialogueRunner(root as DialogueNode, { changeFace: face.changeTo, changeText: responseText.changeText });
-  const buttonContainer = document.querySelector('#test_button_con')!;
+  //const buttonContainer = document.querySelector('#test_button_con')!;
 
-  function renderOptions(optionData?: ReturnType<typeof dialogueRunner.proceed>) {
-    buttonContainer.innerHTML = "";
+  // function renderOptions(optionData?: ReturnType<typeof dialogueRunner.proceed>) {
+  //   buttonContainer.innerHTML = "";
 
-    if (!optionData) return;
+  //   if (!optionData) return;
 
-    optionData.forEach((op) => {
-      const btn = document.createElement('button');
-      btn.onclick = () => renderOptions(op.run());
-      btn.textContent = op.text;
-      buttonContainer.appendChild(btn);
-    });
-  }
+  //   optionData.forEach((op) => {
+  //     const btn = document.createElement('button');
+  //     btn.onclick = () => renderOptions(op.run());
+  //     btn.textContent = op.text;
+  //     buttonContainer.appendChild(btn);
+  //   });
+  // }
+
+  const optionsOverlay = createOptionsOverlay(app, CRYSTAL_BALL_RADIUS);
+  optionsOverlay.con.filters = [noiseFilter]
 
   crystalBall.ball.on('pointertap', () => {
-    renderOptions(dialogueRunner.proceed());
+    optionsOverlay.render(dialogueRunner.proceed());
   });
 
   responseText.centerText(true, true, { x: 0, y: CRYSTAL_BALL_RADIUS / 1.5 });
@@ -71,7 +75,8 @@ async function main() {
   app.renderer.on('resize', () => {
     face.centerContainer();
     crystalBall.redraw();
-    responseText.centerText(true, true, { x: 0, y: CRYSTAL_BALL_RADIUS / 1.5 })
+    responseText.centerText(true, true, { x: 0, y: CRYSTAL_BALL_RADIUS / 1.5 });
+    optionsOverlay.centerContainer();
   });
 }
 
