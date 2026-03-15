@@ -9,6 +9,7 @@ How are you? {
         Sorry to hear that.
         -> elsewhere
     ?: Meh.
+        # edge case, goto directly from question!
         -> elsewhere
     ?: I won't tell
         Why is that? {
@@ -35,6 +36,7 @@ How are you? {
             Followup answer
         ?: Other followup question
             Followup answer 2
+            -> elsewhere
         ?: How deep can we go?
         {
             ?: Oh shit

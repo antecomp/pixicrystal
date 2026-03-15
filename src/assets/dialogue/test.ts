@@ -60,6 +60,8 @@ How are you? {
         ?: ...because I hate you
         mean!
     }
+    ?: Immediate Jump
+        -> elsewhere
 }
         #comment
 Fallback here.
