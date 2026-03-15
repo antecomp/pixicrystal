@@ -48,6 +48,7 @@ async function main() {
   let busy = false;
   const runner = createDialogueRunner(root as DialogueNode);
   async function advance(state: DialogueState) {
+    console.log(state);
     if (busy) return;
     busy = true;
 

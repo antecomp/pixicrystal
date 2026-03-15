@@ -16,7 +16,7 @@ export default function createDialogueRunner(root: DialogueNode) {
             text: node.text,
             face: node.face,
             options: 'options' in node ? node.options : undefined,
-            ended: !('next' in node) && !('options' in node)
+            ended: !('next' in node && node.next) && !('options' in node)
         }
     }
 

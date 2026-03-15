@@ -4,7 +4,7 @@ import { createToken, Lexer } from "chevrotain";
 
 export const Comment = createToken({
     name: "Comment",
-    pattern: /#.*(\n[ \t]*)+/, // comment needs to consume surrounding whitespace and newlines
+    pattern: /#.*(\n[ \t]*)*/, // comment needs to consume surrounding whitespace and newlines
     group: Lexer.SKIPPED,
 });
 
