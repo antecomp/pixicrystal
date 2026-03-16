@@ -98,10 +98,11 @@ I hate you!
 ### Directives
 Within a line of dialogue text (and normal text only) you 
 can define directives for additional behavior. Right now 
-there is only one directive but I plan on adding more.
+there are two directives.
 Directives take the format of `<directive:value>`. 
 
-The current directive this system support is one called `face`, it is used to indicate the expression sprite to use when displaying this dialogues text. If this directive is not supplied, we just assume the most recent face at runtime.
+#### Face
+One directive is called `face`, it is used to indicate the expression sprite to use when displaying this dialogues text. If this directive is not supplied, we just assume the most recent face at runtime.
 
 For example...
 ```
@@ -109,6 +110,9 @@ But what I really think is... <face:thinking>
 That I am angry! <face:anger>
 ```
 > How you handle these faces is up to implementation, of course, but the basic idea is that the generated dialogue "node" (described below) has a face attribute you can read.
+
+#### Signals
+(TODO: DOCUMENT)
 
 ### DialogueNode (actual runtime type)
 If making your own "runner" for the dialogue, know that this parser converts everything into a graph of DialogueNodes. DialogueNodes take the shape:
@@ -137,7 +141,6 @@ The compile function returns the DialogueNode at the "start" of this graph corre
 -------------------------------------------------------
 
 ### TODO
-* Side-Effect (Alternatively, signal-like) Directives. 
 * Maybe some runtime directive to swap out text for variables?
     * Maybe something like $var inline?
 * Conditional Branches based on runtime state (use SE directives to update state too, be careful about traceability!)

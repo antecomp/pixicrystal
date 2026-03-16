@@ -1,12 +1,13 @@
 @start
 Hey, <face:neu_smile>
-How are you? {
+How are you? <face:neu_grin> {
     ?: Doing well!
         That is great to hear. <face:clo_grin>
         # will fall out of this block and hit "wrapup" goto
     ?: Not great.
         @bad
         Sorry to hear that. <face:concern_tfrown>
+        Well... <signal:something>
         -> elsewhere
     ?: I've been... {
         ?: Worse

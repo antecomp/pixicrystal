@@ -41,6 +41,35 @@ function createDialogueStateMachine(root: DialogueNode) {
     return { proceed, choose, currentState };
 }
 
+function createSignalBus() {
+    const bus = new Map<string, (() => void)[]>();
+
+    function addListener(signal: string, action: () => void) {
+        const listeners = bus.get(signal) ?? [];
+        listeners.push(action);
+        bus.set(signal, listeners);
+    }
+
+    function removeListener(signal: string, action: () => void) {
+        const listeners = bus.get(signal);
+        if(!listeners) return;
+        bus.set(signal,
+            listeners.filter(listener => listener !== action)
+        );
+    }
+
+    function emit(signal: string) {
+        const listeners = bus.get(signal);
+        if(!listeners) {
+            console.warn("Received unhandled signal " + signal);
+            return;
+        };
+        listeners.forEach(listener => listener());
+    }
+
+    return {addListener, removeListener, emit};
+}
+
 export default function createDialogueRunner(
     root: DialogueNode,
     responseText: ReturnType<typeof createCrossFadingTextDisplay>,
@@ -48,6 +77,7 @@ export default function createDialogueRunner(
     face: Awaited<ReturnType<typeof createFacesContainer>>
 ) {
     const runner = createDialogueStateMachine(root);
+    const signalBus = createSignalBus();
 
     let busy = false;
 
@@ -57,7 +87,7 @@ export default function createDialogueRunner(
 
         await optionsOverlay.hide();
         if (state.face) face.changeTo(state.face);
-        if(state.signals) console.log(state.signals);
+        if(state.signals) state.signals.forEach(signal => signalBus.emit(signal));
         await responseText.changeText(state.text);
 
         if(state.options) {
@@ -83,6 +113,8 @@ export default function createDialogueRunner(
     return {
         // advance, 
         start, 
-        proceed
+        proceed,
+        addSignalListener: signalBus.addListener,
+        removeSignalListener: signalBus.removeListener
     }
 }
