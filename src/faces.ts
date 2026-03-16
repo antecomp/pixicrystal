@@ -1,18 +1,22 @@
 import { Application, Texture } from 'pixi.js';
-import pleased from './assets/chars/pleased.png';
-import smile from './assets/chars/smile.png';
-import weary from './assets/chars/weary.png';
-import nice from './assets/nice.jpg';
-import what from './assets/chars/what.jpg';
 
 import { createCrossfadingTextureDisplay, loadImageAsTexture } from './sprite';
 
-const FACE_SOURCES = {
-    pleased, smile, weary, nice, what
-}
+const faceModules = import.meta.glob<string>(
+    './assets/faces/*.{png,jpg,jpeg,webp,avif,gif,svg}',
+    { eager: true, import: 'default' }
+);
 
-export type AvailableFace = keyof typeof FACE_SOURCES;
-export type FaceChangeFn = (to: AvailableFace) => Promise<void>;
+export const FACE_SOURCES: Record<string, string> = Object.fromEntries(
+    Object.entries(faceModules).map(([path, url]) => {
+        const fileName = path.split('/').pop()?.replace('.png', '')!;
+        return [fileName, url];
+    })
+);
+
+console.log(FACE_SOURCES);
+
+export type FaceChangeFn = (to: string) => Promise<void>;
 
 export default async function createFacesContainer(app: Application) {
     const FACE_TEXTURES: Record<string, Texture> = {};
@@ -23,7 +27,7 @@ export default async function createFacesContainer(app: Application) {
 
     const {container, changeTexture} = await createCrossfadingTextureDisplay(app);
 
-    function changeTo(face: AvailableFace) {
+    function changeTo(face: string) {
         return changeTexture(FACE_TEXTURES[face]);
     }
 

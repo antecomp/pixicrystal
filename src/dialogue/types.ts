@@ -1,5 +1,3 @@
-import { AvailableFace } from "../faces";
-
 export type DialogueOption = {
     text: string;
     next: DialogueNode;
@@ -8,7 +6,7 @@ export type DialogueOption = {
 export type DialogueNode = {
     text: string;
     // Otherwise inherit from parent.
-    face?: AvailableFace;
+    face?: string;
 } & ({
     next?: DialogueNode;
 } | {

@@ -1,24 +1,24 @@
 @start
-Hey, <face:smile>
+Hey, <face:neu_smile>
 How are you? {
     ?: Doing well!
-        That is great to hear. <face:pleased>
+        That is great to hear. <face:clo_grin>
     ?: Not great.
         @bad
-        Sorry to hear that. <face:weary>
+        Sorry to hear that. <face:concern_tfrown>
         -> elsewhere
     ?: I've been... {
         ?: Worse
-            Hey that's a start! <face:smile>
+            Hey that's a start! <face:devious_tgrin>
         ?: Better
             -> bad
     }
     ?: I won't say
-        Why is that? {
+        Why is that? <face:concern_tfrown> {
             ?: Don't feel like it!
-                Verywell...
+                Verywell... <face:neu_neu>
             ?: I don't know you!
-                You will!
+                You will! <face:devious_smile>
         }
 }
 -> wrapup
@@ -27,5 +27,5 @@ How are you? {
 If you ever want to talk about it,
 Do not hesitate to.
 @wrapup
-Well thats it for this test... <face:weary>
+Well thats it for this test... <face:soft_frown>
 -> start

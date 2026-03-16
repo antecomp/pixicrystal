@@ -1,11 +1,11 @@
-import createFacesContainer, { AvailableFace } from "../faces";
+import createFacesContainer from "../faces";
 import createOptionsOverlay from "../options";
 import { createCrossFadingTextDisplay } from "../text";
 import { DialogueNode } from "./types";
 
 export type DialogueState = {
     text: string;
-    face?: AvailableFace;
+    face?: string;
     options?: { text: string; next: DialogueNode }[];
     ended: boolean;
 }

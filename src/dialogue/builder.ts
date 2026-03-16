@@ -1,12 +1,11 @@
 import { DialogueNode } from "./types";
-import { AvailableFace } from "../faces";
 import { UnlinkedNode } from "./processor";
 
 // Lazy, but good enough lol. I don't want to make a grammar for like 2 special notations in a text line type.
 function parseTextLine(line: string): DialogueNode {
     const faceRgx = /\<face:.+?\>/
     const faceMatches = (line.match(faceRgx) ?? []).map(match => match.replace(/\<face:|\>/g, ''));
-    return { text: line.replace(faceRgx, '').trim(), face: faceMatches[0] as AvailableFace }
+    return { text: line.replace(faceRgx, '').trim(), face: faceMatches[0] }
 }
 
 export function build(nodes: UnlinkedNode[]): DialogueNode | null {
