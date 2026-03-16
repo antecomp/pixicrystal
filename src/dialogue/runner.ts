@@ -10,7 +10,7 @@ export type DialogueState = {
     ended: boolean;
 }
 
-export function createDialogueRunner(root: DialogueNode) {
+function createDialogueStateMachine(root: DialogueNode) {
     let current = root;
 
     function stateOf(node: DialogueNode): DialogueState {
@@ -38,15 +38,17 @@ export function createDialogueRunner(root: DialogueNode) {
     return { proceed, choose, currentState };
 }
 
-export default function createDialogueAdvancer(
-    runner: ReturnType<typeof createDialogueRunner>,
+export default function createDialogueRunner(
+    root: DialogueNode,
     responseText: ReturnType<typeof createCrossFadingTextDisplay>,
     optionsOverlay: ReturnType<typeof createOptionsOverlay>,
     face: Awaited<ReturnType<typeof createFacesContainer>>
 ) {
+    const runner = createDialogueStateMachine(root);
+
     let busy = false;
 
-    async function advance(state: DialogueState) {
+    async function render(state: DialogueState) {
         if(busy) return;
         busy = true;
 
@@ -57,7 +59,7 @@ export default function createDialogueAdvancer(
         if(state.options) {
             await optionsOverlay.show(state.options, index => {
                 if(busy) return;
-                advance(runner.choose(index));
+                render(runner.choose(index));
             });
         }
 
@@ -65,13 +67,13 @@ export default function createDialogueAdvancer(
     }
 
     function start() {
-        advance(runner.currentState());
+        render(runner.currentState());
     }
 
     function proceed() {
         const state = runner.currentState();
         if (state.options || state.ended || busy) return;
-        advance(runner.proceed());
+        render(runner.proceed());
     }
 
     return {

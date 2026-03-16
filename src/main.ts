@@ -9,9 +9,7 @@ import { createCrossFadingTextDisplay } from './text';
 
 import input from './dialogues/simple.bny?raw'
 import { compileBnyDialogue } from './dialogue/compilebny';
-import createDialogueAdvancer from './dialogue/runner';
-import { createDialogueRunner } from './dialogue/runner';
-import { DialogueNode } from "./dialogue/types";
+import createDialogueRunner from './dialogue/runner';
 import createOptionsOverlay from './options';
 
 
@@ -50,10 +48,9 @@ async function main() {
   responseText.centerText(true, true, { x: 0, y: CRYSTAL_BALL_RADIUS / 1.5 });
   responseText.container.filters = [noiseFilter]
 
-  const runner = createDialogueRunner(root as DialogueNode);
-  const advancer = createDialogueAdvancer(runner, responseText, optionsOverlay, face);
-  crystalBall.ball.on('pointertap', advancer.proceed);
-  advancer.start();
+  const runner = createDialogueRunner(root, responseText, optionsOverlay, face);
+  crystalBall.ball.on('pointertap', runner.proceed);
+  runner.start();
 
   app.renderer.on('resize', () => {
     face.centerContainer();
@@ -63,6 +60,6 @@ async function main() {
   });
 }
 
-const root = compileBnyDialogue(input);
+const root = compileBnyDialogue(input)!;
 
 main();
