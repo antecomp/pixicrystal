@@ -137,9 +137,11 @@ The compile function returns the DialogueNode at the "start" of this graph corre
 -------------------------------------------------------
 
 ### TODO
-* Side-Effect Directives. 
+* Side-Effect (Alternatively, signal-like) Directives. 
 * Maybe some runtime directive to swap out text for variables?
+    * Maybe something like $var inline?
 * Conditional Branches based on runtime state (use SE directives to update state too, be careful about traceability!)
+* Simple "skipped" block that can have a label inside it. Only way to navigate into that block is to goto inside it, its automatically skipped otherwise.
 
 ## VS Code Syntax Highlighting
 

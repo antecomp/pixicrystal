@@ -3,6 +3,7 @@ Hey, <face:neu_smile>
 How are you? {
     ?: Doing well!
         That is great to hear. <face:clo_grin>
+        # will fall out of this block and hit "wrapup" goto
     ?: Not great.
         @bad
         Sorry to hear that. <face:concern_tfrown>
@@ -22,10 +23,10 @@ How are you? {
         }
 }
 -> wrapup
-# this is a comment
 @elsewhere
 If you ever want to talk about it,
 Do not hesitate to.
 @wrapup
 Well thats it for this test... <face:soft_frown>
+# Just always loop-back to the beginning so we can test the other options.
 -> start

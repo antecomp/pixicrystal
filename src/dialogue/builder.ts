@@ -1,11 +1,28 @@
 import { DialogueNode } from "./types";
 import { UnlinkedNode } from "./processor";
 
-// Lazy, but good enough lol. I don't want to make a grammar for like 2 special notations in a text line type.
+/*
+ * Lazy final parsing of actual text lines into DialogueNode shape.
+ * I did not want to incorporate directives into the grammar since we can just easily extract them here.
+ */
+const DIRECTIVE_REGEX = /<([^:>]+):([^>]+)>/g;
+
 function parseTextLine(line: string): DialogueNode {
-    const faceRgx = /\<face:.+?\>/
-    const faceMatches = (line.match(faceRgx) ?? []).map(match => match.replace(/\<face:|\>/g, ''));
-    return { text: line.replace(faceRgx, '').trim(), face: faceMatches[0] }
+    const directives: Record<string, string[]> = Object.create(null);
+    const text = line.replace(DIRECTIVE_REGEX, (_, directive: string, value: string) => {
+        (directives[directive] ??= []).push(value); // Side effect, save directive to handle in another pass.
+
+        return '';
+    }).trim();
+
+    let face: string | undefined;
+    for (const [directive, values] of Object.entries(directives)) {
+        if (directive === 'face' && face === undefined) {
+            face = values[0];
+        }
+    }
+
+    return { text, face };
 }
 
 export function build(nodes: UnlinkedNode[]): DialogueNode | null {
