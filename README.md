@@ -6,6 +6,10 @@ Made using PixiJS, Vite & Tauri.
 # The BunNarraY Dialogue Language 𑣲₍ ᐢ. .ᐢ₎
 Because I am utterly insane I took this as an opportunity to create my own custom dialogue language parser using [chevrotain](https://chevrotain.io/docs/).
 
+## Runtime Usage
+(TODO, still working on the runner API)
+
+## Writing Dialogue
 The syntax is pretty simple...
 
 ### Basic Text
@@ -132,6 +136,33 @@ runner.addSignalListener('something', function action() {
 })
 ```
 
+### Runtime Variables
+For pieces of text that is only known at (and could be changed during) runtime, you can also use variable names in dialogue lines:
+```
+Hello, $name.
+```
+These variable names always take the shape `$var`, they can only be basic alphanumeric characters directly after a dollar sign. This means that you use punctuation or other characters naturally without weird whitespace issues (like the `$name.` example above).
+
+You can set and read these variables at runtime using two methods, `setVar` and `readVar`, in the dialogue runner API;
+```typescript
+const runner = createDialogueRunner(root, {responseText, optionsOverlay, face});
+const name = "Rabbit";
+runner.setVar('name', name);
+// Now "Hello, $name" will read out "Hello, Rabbit."
+```
+
+Also, if some stuff is known immediately, an initial record of some variables can be passed to `createDialogueRunner`:
+```typescript
+const runner = createDialogueRunner(root, {responseText, optionsOverlay, face}, {name: "Rabbit"});
+runner.setVar('name', name);
+// Works the same, now "Hello, $name" will read out "Hello, Rabbit."
+```
+
+> Note: Variables (currently) cannot be used for option text, only normal lines of dialogue.
+
+> Actually setting and working with these variables is the responsibility of the dialogue runner and not the parsing algorithm, this is to keep things slightly more implementation agnostic and not have any state creep into the compiler.
+
+
 ### DialogueNode (actual runtime type)
 If making your own "runner" for the dialogue, know that this parser converts everything into a graph of DialogueNodes. DialogueNodes take the shape:
 ```typescript
@@ -162,11 +193,9 @@ The compile function returns the DialogueNode at the "start" of this graph corre
 -------------------------------------------------------
 
 ### TODO
-* Maybe some runtime directive to swap out text for variables?
-    * Maybe something like $var inline?
+* Simple "skipped" block that can have a label inside it. Only way to navigate into that block is to goto inside it, its automatically skipped otherwise.
 * Conditional Branches based on runtime state (use SE directives to update state too, be careful about traceability!)
     * Unless I want some basic "set" directives to have a runtime table of values. Might be overengineering there though...
-* Simple "skipped" block that can have a label inside it. Only way to navigate into that block is to goto inside it, its automatically skipped otherwise.
 * After the game jam, to make this general, add a "speaker" property to.
     * I think a `speaker: text` syntax for lines would work well here! Keep a similar inherit behavior to faces.
 

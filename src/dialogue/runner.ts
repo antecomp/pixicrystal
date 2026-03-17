@@ -92,10 +92,16 @@ export default function createDialogueRunner(
     async function render(state: DialogueState) {
         if (busy) return;
         busy = true;
+
         await deps.optionsOverlay.hide();
+
         if (state.face) deps.face.changeTo(state.face);
+
         if (state.signals) state.signals.forEach(signal => signalBus.emit(signal));
-        await deps.responseText.changeText(renderTextLine(state.text, Object.fromEntries(varMap)));
+
+        await deps.responseText.changeText(
+            renderTextLine(state.text, Object.fromEntries(varMap))
+        );
 
         if (state.options) {
             await deps.optionsOverlay.show(state.options, index => {
@@ -122,6 +128,8 @@ export default function createDialogueRunner(
         start,
         proceed,
         addSignalListener: signalBus.addListener,
-        removeSignalListener: signalBus.removeListener
+        removeSignalListener: signalBus.removeListener,
+        setVar: (what: string, to: string) => varMap.set(what, to),
+        readVar: (what: string) => varMap.get(what)
     }
 }

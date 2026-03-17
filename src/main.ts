@@ -52,6 +52,7 @@ async function main() {
   runner.addSignalListener('hitend', () => console.log('Hit end detected in main!'));
   runner.addSignalListener('bonus', function bonus() {
     console.log("This should only run once!");
+    runner.setVar('name', 'buddy');
     runner.removeSignalListener('bonus', bonus);
   })
   runner.start();
