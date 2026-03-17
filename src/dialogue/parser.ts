@@ -5,14 +5,14 @@ goto        -> Goto Text Newline?
 textNode    -> (Label Text Newline)? Text (optionBlock | Newline?)
 optionBlock -> Newline? BlockOpen Newline choice+ BlockClose Newline?
 choice      -> Option Text (optionBlock | Newline statement*)
-skipBlock   -> OpenBracket BlockKeyword Text CloseBracket Newline statement* OpenBracket TagClose BlockKeyword CloseBracket Newline?
-matchBlock  -> OpenBracket MatchKeyword Text CloseBracket Newline matchBranch+ OpenBracket TagClose MatchKeyword CloseBracket Newline?
+skipBlock   -> OpenBracket BlockKeyword Colon Text CloseBracket Newline statement* OpenBracket TagClose BlockKeyword CloseBracket Newline?
+matchBlock  -> OpenBracket MatchKeyword Colon Text CloseBracket Newline matchBranch+ OpenBracket TagClose MatchKeyword CloseBracket Newline?
 matchBranch -> Equals Text Newline statement*
 Plus a bunch of bs to make Newline optional actually for EOF because im dumb
 */
 
 import { CstParser } from "chevrotain";
-import { BlockClose, BlockOpen, Equals, Goto, Label, Newline, Text, Option, OpenBracket, CloseBracket, TagClose, BlockKeyword, MatchKeyword } from "./lexer";
+import { BlockClose, BlockOpen, Equals, Goto, Label, Newline, Text, Option, OpenBracket, CloseBracket, TagClose, BlockKeyword, MatchKeyword, Colon } from "./lexer";
 
 export class DialogueParser extends CstParser {
     constructor() {
@@ -21,7 +21,7 @@ export class DialogueParser extends CstParser {
             BlockOpen, BlockClose,
             OpenBracket, CloseBracket,
             TagClose, BlockKeyword, MatchKeyword,
-            Equals, Newline
+            Equals, Colon, Newline
         ]);
         this.performSelfAnalysis();
     }
@@ -82,17 +82,17 @@ export class DialogueParser extends CstParser {
             }
         ]);
     });
-
     skipBlock = this.RULE("skipBlock", () => {
         this.CONSUME(OpenBracket);
         this.CONSUME(BlockKeyword);
-        this.CONSUME(Text);         // label name
+        this.CONSUME(Colon);
+        this.CONSUME(Text);
         this.CONSUME(CloseBracket);
         this.CONSUME(Newline);
         this.MANY(() => this.SUBRULE(this.statement));
         this.CONSUME2(OpenBracket);
         this.CONSUME(TagClose);
-        this.CONSUME2(BlockKeyword); // [/block]
+        this.CONSUME2(BlockKeyword);
         this.CONSUME2(CloseBracket);
         this.OPTION(() => this.CONSUME2(Newline));
     });
@@ -100,13 +100,14 @@ export class DialogueParser extends CstParser {
     matchBlock = this.RULE("matchBlock", () => {
         this.CONSUME(OpenBracket);
         this.CONSUME(MatchKeyword);
-        this.CONSUME(Text);         // function name
+        this.CONSUME(Colon);
+        this.CONSUME(Text);
         this.CONSUME(CloseBracket);
         this.CONSUME(Newline);
         this.MANY1(() => this.SUBRULE(this.matchBranch));
         this.CONSUME2(OpenBracket);
         this.CONSUME(TagClose);
-        this.CONSUME2(MatchKeyword); // [/match]
+        this.CONSUME2(MatchKeyword);
         this.CONSUME2(CloseBracket);
         this.OPTION(() => this.CONSUME2(Newline));
     });

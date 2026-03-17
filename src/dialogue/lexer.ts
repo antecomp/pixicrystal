@@ -42,16 +42,21 @@ export const TagClose = createToken({
     pattern: /\//,
 });
 
+export const Colon = createToken({
+    name: "Colon",
+    pattern: /:/
+})
+
 // Keywords
 // Must come befre text so they win at their positions...
 export const BlockKeyword = createToken({
     name: "BlockKeyword",
-    pattern: /block:/
+    pattern: /block/
 });
 
 export const MatchKeyword = createToken({
     name: "MatchKeyword",
-    pattern: /match:/
+    pattern: /match/
 });
 
 // --- Line-starting tokens ---
@@ -100,6 +105,7 @@ export const allTokens = [
     Goto,
     Label,
     Equals,
+    Colon,
     Text,
 ];
 
