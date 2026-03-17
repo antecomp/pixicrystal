@@ -26,7 +26,7 @@ How are you? <face:neu_grin> {
 -> wrapup
 @elsewhere
 If you ever want to talk about it,
-Do not hesitate to.
+just let me know.
 @wrapup
 Well thats it for this test... <face:soft_frown> <signal:hitend> <signal:bonus>
 # Just always loop-back to the beginning so we can test the other options.

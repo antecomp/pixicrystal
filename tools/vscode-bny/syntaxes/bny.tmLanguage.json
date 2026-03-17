@@ -6,6 +6,9 @@
       "include": "#comment"
     },
     {
+      "include": "#variable"
+    },
+    {
       "include": "#label"
     },
     {
@@ -22,6 +25,14 @@
     }
   ],
   "repository": {
+    "variable": {
+      "patterns": [
+        {
+          "name": "variable.other.bny",
+          "match": "\\$[A-Za-z_][A-Za-z0-9_]*"
+        }
+      ]
+    },
     "comment": {
       "patterns": [
         {
