@@ -3,7 +3,7 @@ A short custom-built visual novel created for the Agora Road "Demo Disc Jam"
 
 Made using PixiJS, Vite & Tauri.
 
-# BNY DIALOGUE 𑣲₍ ᐢ. .ᐢ₎
+# The BunNarraY Dialogue Language 𑣲₍ ᐢ. .ᐢ₎
 Because I am utterly insane I took this as an opportunity to create my own custom dialogue language parser using [chevrotain](https://chevrotain.io/docs/).
 
 The syntax is pretty simple...
@@ -137,8 +137,10 @@ If making your own "runner" for the dialogue, know that this parser converts eve
 ```typescript
 export type DialogueNode = {
     text: string;
-    // Otherwise inherit from parent.
-    face?: string;
+    // Optional, will inherit from parent (i.e be unchanged) if undefined.
+    face: string | undefined;
+    // Signal response handled by runner.
+    signals: string[] | undefined
 } & ({
     next?: DialogueNode;
 } | {
@@ -152,7 +154,8 @@ export type DialogueOption = {
 ```
 The compile function returns the DialogueNode at the "start" of this graph corresponding to the first line of text in the dialogue script.
 
-### Why is it called BNY?
+### Why is it called BunNarraY?
+* Bun Narray-tives. Or Bun Array of text or something idk.
 * bnuy :)
 * .bny is not a commonly used file-extension.
 
@@ -163,6 +166,8 @@ The compile function returns the DialogueNode at the "start" of this graph corre
     * Maybe something like $var inline?
 * Conditional Branches based on runtime state (use SE directives to update state too, be careful about traceability!)
 * Simple "skipped" block that can have a label inside it. Only way to navigate into that block is to goto inside it, its automatically skipped otherwise.
+* After the game jam, to make this general, add a "speaker" property to.
+    * I think a `speaker: text` syntax for lines would work well here! Keep a similar inherit behavior to faces.
 
 ## VS Code Syntax Highlighting
 
