@@ -38,3 +38,21 @@ Fallback we should not see
 
 @onA
 This is the result of the goto we should hit.
+What about chained matches?
+[match:test]
+    =x
+        Should not see this
+[/match]
+[match:testb]
+    =b
+        Detected b, because test a failed first
+[/match]
+And what about nested matches?
+[match:test]
+    =a
+        [match:testb]
+            =b
+                Got to b through a nested match
+        [/match]
+[/match]
+Also have a fallback here, does our nested match connect?
