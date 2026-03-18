@@ -130,6 +130,7 @@ Match blocks allow dialogue to automatically branch based on game state. Match b
 [/match]
 fallback
 ```
+Where `on` is the name of the function that we will run and match the result of, and each case after an `=` is a potential return string of that function.
 For example...
 ```
 Well, that depends on if the dragon is slain...

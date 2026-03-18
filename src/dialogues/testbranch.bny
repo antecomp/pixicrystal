@@ -1,4 +1,4 @@
-Hello, <face:neu_neu>
+Hello, $name <face:neu_neu>
 Welcome to the branch test.
 Below will branch on the 'test' condition.
 [match:test]
