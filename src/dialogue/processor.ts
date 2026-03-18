@@ -75,14 +75,14 @@ function flattenSequence(
         const unlinked: UnlinkedNode = {
             id: node.id,
             text: node.text,
-            next: node.block ? null : nextRef,
+            next: node.optionBlock ? null : nextRef,
         };
 
         // Preserve source order so build() can use the first flattened node as the dialogue root.
         nodes.push(unlinked);
 
-        if (node.block) {
-            unlinked.options = flattenBlock(node.block, node.text, nextRef, nodes, labels);
+        if (node.optionBlock) {
+            unlinked.options = flattenBlock(node.optionBlock, node.text, nextRef, nodes, labels);
         }
     }
 

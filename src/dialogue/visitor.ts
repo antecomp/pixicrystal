@@ -14,7 +14,7 @@ export type TextTree = {
     id: string;
     text: string;             // raw, face tag still inside
     label?: string;           // @name if present
-    block?: OptionTree[];     // present if followed by an option block
+    optionBlock?: OptionTree[];     // present if followed by an option block
 };
 
 export type NodeTree = TextTree | GotoTree;
@@ -78,7 +78,7 @@ export class DialogueVisitor extends BaseVisitor {
         };
 
         if (ctx.optionBlock) {
-            node.block = this.visit(ctx.optionBlock[0]);
+            node.optionBlock = this.visit(ctx.optionBlock[0]);
         }
 
         return node;

@@ -1,6 +1,16 @@
 export type DialogueOption = {
     text: string;
-    next: DialogueNode;
+
+} & (
+    | { next: DialogueNode; }
+    | { match: DialogueMatch }
+)
+
+export type DialogueMatch = {
+    on: string,
+    matches: {
+        [match: string]: DialogueNode
+    }
 }
 
 export type DialogueNode = {
@@ -9,8 +19,8 @@ export type DialogueNode = {
     face: string | undefined;
     // Signal response handled by runner.
     signals: string[] | undefined
-} & ({
-    next?: DialogueNode;
-} | {
-    options: DialogueOption[];
-});
+} & (
+    | { next?: DialogueNode; }
+    | { options: DialogueOption[]; }
+    | { match: DialogueMatch }
+);
