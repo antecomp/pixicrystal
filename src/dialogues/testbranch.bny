@@ -72,3 +72,19 @@ Lastly, the weirdest edge case. Sometimes we might have a nested match that is c
         We should hit this b detect
 [/match]
 And *then* this is the last fallback for this annoying thing.
+While we are here, we should also test the skip block
+[block:xxx]
+and this second
+->xxxdone
+[/block]
+You should see this first
+->xxx
+@xxxdone
+And finally we're here.
+# Okay, one last stupid edge case. Matches as an option "fallback" (chain).
+# Are you ready to test it? {
+#     ?: Yeah lets go for it
+#         Sweet, lets go.
+#     ?: Yes, but with internal match too!
+# }
+# sdfjhfsd
