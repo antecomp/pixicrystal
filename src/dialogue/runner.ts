@@ -108,16 +108,11 @@ export default function createDialogueRunner(
         optionsOverlay: ReturnType<typeof createOptionsOverlay>,
         face: Awaited<ReturnType<typeof createFacesContainer>>
     },
+    matchFuncs: Record<string, () => string>,
     initialVarMap?: Record<string, string>
 ) {
 
-    const PLACEHOLDERFUNCS: Record<string, () => string> = {
-        test: () => "a",
-        testb: () => "b",
-        testx: () => "x"
-    }
-
-    const stateMachine = createDialogueStateMachine(root, PLACEHOLDERFUNCS);
+    const stateMachine = createDialogueStateMachine(root, matchFuncs);
     const signalBus = createSignalBus();
     const varMap = new Map<string, string>(initialVarMap && Object.entries(initialVarMap));
 
