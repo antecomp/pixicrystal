@@ -27,36 +27,30 @@ export const BlockClose = createToken({
     pattern: /\}/,
 });
 
-export const OpenBracket = createToken({
-    name: "OpenBracket",
-    pattern: /\[/,
+// --- Block tag tokens because lexing this generally makes me want to eat uranium.
+export const SkipBlockOpen = createToken({
+    name: "SkipBlockOpen",
+    pattern: /\[block:/,
+});
+
+export const SkipBlockClose = createToken({
+    name: "SkipBlockClose",
+    pattern: /\[\/block\]/,
+});
+
+export const MatchBlockOpen = createToken({
+    name: "MatchBlockOpen",
+    pattern: /\[match:/,
+});
+
+export const MatchBlockClose = createToken({
+    name: "MatchBlockClose",
+    pattern: /\[\/match\]/,
 });
 
 export const CloseBracket = createToken({
     name: "CloseBracket",
     pattern: /\]/,
-});
-
-export const TagClose = createToken({
-    name: "TagClose",
-    pattern: /\//,
-});
-
-export const Colon = createToken({
-    name: "Colon",
-    pattern: /:/
-})
-
-// Keywords
-// Must come befre text so they win at their positions...
-export const BlockKeyword = createToken({
-    name: "BlockKeyword",
-    pattern: /block/
-});
-
-export const MatchKeyword = createToken({
-    name: "MatchKeyword",
-    pattern: /match/
 });
 
 // --- Line-starting tokens ---
@@ -85,7 +79,7 @@ export const Equals = createToken({
 // General, consume everything else until new line.
 export const Text = createToken({
     name: "Text",
-    pattern: /[^\n{}\[\]]+/,
+    pattern: /[^\n{}\[\]]+/
 });
 
 // --- Lexer ---
@@ -96,16 +90,15 @@ export const allTokens = [
     Newline,
     BlockOpen,
     BlockClose,
-    OpenBracket,
-    CloseBracket,
-    TagClose,
-    BlockKeyword,
-    MatchKeyword,
+    SkipBlockOpen,
+    SkipBlockClose,
+    MatchBlockOpen,
+    MatchBlockClose,
     Option,
     Goto,
     Label,
     Equals,
-    Colon,
+    CloseBracket,
     Text,
 ];
 

@@ -1,35 +1,35 @@
 /*
 dialogue    -> statement*
 statement   -> textNode | goto | skipBlock | matchBlock
-goto        -> Goto Text Newline?
-textNode    -> (Label Text Newline)? Text (optionBlock | Newline?)
-optionBlock -> Newline? BlockOpen Newline choice+ BlockClose Newline?
-choice      -> Option Text (optionBlock | Newline statement*)
-skipBlock   -> OpenBracket BlockKeyword Colon Text CloseBracket Newline statement* OpenBracket TagClose BlockKeyword CloseBracket Newline?
-matchBlock  -> OpenBracket MatchKeyword Colon Text CloseBracket Newline matchBranch+ OpenBracket TagClose MatchKeyword CloseBracket Newline?
-matchBranch -> Equals Text Newline statement*
-Plus a bunch of bs to make Newline optional actually for EOF because im dumb
+goto        → Goto Text Newline?
+textNode    → (Label Text Newline)? Text (optionBlock | Newline statement*)?
+optionBlock → BlockOpen Newline choice+ BlockClose Newline?
+choice      → Option Text (optionBlock | matchBlock | Newline statement*)
+skipBlock   → SkipBlockOpen Text CloseBracket Newline statement* SkipBlockClose Newline?
+matchBlock  → MatchBlockOpen Text CloseBracket Newline matchBranch+ MatchBlockClose Newline? matchBlock?
+matchBranch → Equals Text Newline statement*
 */
 
 import { CstParser } from "chevrotain";
-import { BlockClose, BlockOpen, Equals, Goto, Label, Newline, Text, Option, OpenBracket, CloseBracket, TagClose, BlockKeyword, MatchKeyword, Colon } from "./lexer";
+import {
+    BlockClose, BlockOpen, CloseBracket, Equals, Goto, Label,
+    MatchBlockClose, MatchBlockOpen, Newline,
+    Option, SkipBlockClose, SkipBlockOpen, Text
+} from "./lexer";
+
 
 export class DialogueParser extends CstParser {
     constructor() {
         super([
-            Text, Label, Goto, Option,
-            BlockOpen, BlockClose,
-            OpenBracket, CloseBracket,
-            TagClose, BlockKeyword, MatchKeyword,
-            Equals, Colon, Newline
+            BlockClose, BlockOpen, CloseBracket, Equals, Goto, Label,
+            MatchBlockClose, MatchBlockOpen, Newline,
+            Option, SkipBlockClose, SkipBlockOpen, Text
         ]);
         this.performSelfAnalysis();
     }
 
     dialogue = this.RULE("dialogue", () => {
-        this.OPTION(() => this.CONSUME(Newline));  // leading newline
         this.MANY(() => this.SUBRULE(this.statement))
-        // this.OPTION2(() => this.CONSUME2(Newline)); // Trailing newline (do we need this?)
     });
 
     statement = this.RULE("statement", () => {
@@ -48,79 +48,77 @@ export class DialogueParser extends CstParser {
     });
 
     textNode = this.RULE("textNode", () => {
+        // Optional leading @label
         this.OPTION(() => {
             this.CONSUME(Label);
             this.CONSUME1(Text);
             this.CONSUME1(Newline);
         });
         this.CONSUME2(Text);
+
         this.OR([
-            { ALT: () => this.SUBRULE(this.optionBlock) },
-            { ALT: () => this.OPTION2(() => this.CONSUME2(Newline)) }, // optional trailing newline for EOF
+            { ALT: () => this.SUBRULE(this.optionBlock) }, // Must be on same line.
+            {
+                ALT: () => {
+                    this.CONSUME2(Newline) // required newline for matchBlock owned by this node.
+                    this.SUBRULE(this.matchBlock)
+                }
+            }, // Otherwise an optional newline, either will move into the next statement, or just terminate.
+            { ALT: () => this.OPTION2(() => this.CONSUME3(Newline))}
         ]);
     });
 
     optionBlock = this.RULE("optionBlock", () => {
-        this.OPTION(() => this.CONSUME1(Newline));
         this.CONSUME(BlockOpen);
-        this.CONSUME2(Newline);
+        this.CONSUME(Newline);
         this.MANY(() => this.SUBRULE(this.choice));
         this.CONSUME(BlockClose);
-        this.OPTION2(() => this.CONSUME3(Newline));  // optional trailing newline for EOF
+        this.OPTION2(() => this.CONSUME2(Newline));  // optional trailing newline for EOF
     });
 
     choice = this.RULE("choice", () => {
         this.CONSUME(Option);
         this.CONSUME(Text);
         this.OR([
+            // Must be immediately followed by optionBlock (no newline)
             { ALT: () => this.SUBRULE(this.optionBlock) },
+            // Can be immediately followed by matchBlock (may remove)
+            { ALT: () => this.SUBRULE(this.matchBlock) },
+            // Remaining statements require a new line break to distinguish between option text
             {
                 ALT: () => {
-                    this.CONSUME(Newline);
-                    this.MANY(() => this.SUBRULE(this.statement));
+                    this.CONSUME(Newline)
+                    this.MANY(() => this.SUBRULE(this.statement))
                 }
             }
         ]);
     });
+
     skipBlock = this.RULE("skipBlock", () => {
-        this.CONSUME(OpenBracket);
-        this.CONSUME(BlockKeyword);
-        this.CONSUME(Colon);
+        this.CONSUME(SkipBlockOpen);
         this.CONSUME(Text);
         this.CONSUME(CloseBracket);
-        this.CONSUME(Newline);
+        this.CONSUME2(Newline);
         this.MANY(() => this.SUBRULE(this.statement));
-        this.CONSUME2(OpenBracket);
-        this.CONSUME(TagClose);
-        this.CONSUME2(BlockKeyword);
-        this.CONSUME2(CloseBracket);
-        this.OPTION(() => this.CONSUME2(Newline));
-    });
+        this.CONSUME(SkipBlockClose);
+        this.OPTION2(() => this.CONSUME3(Newline));
+    })
 
     matchBlock = this.RULE("matchBlock", () => {
-        this.CONSUME(OpenBracket);
-        this.CONSUME(MatchKeyword);
-        this.CONSUME(Colon);
+        this.CONSUME(MatchBlockOpen);
         this.CONSUME(Text);
         this.CONSUME(CloseBracket);
-        this.CONSUME(Newline);
+        this.CONSUME1(Newline);
         this.MANY1(() => this.SUBRULE(this.matchBranch));
-        this.CONSUME2(OpenBracket);
-        this.CONSUME(TagClose);
-        this.CONSUME2(MatchKeyword);
-        this.CONSUME2(CloseBracket);
-        this.OPTION(() => this.CONSUME2(Newline));
+        this.CONSUME(MatchBlockClose);
+        this.OPTION2(() => this.CONSUME2(Newline));
+        this.OPTION3(() => this.SUBRULE(this.matchBlock));
     });
 
-matchBranch = this.RULE("matchBranch", () => {
-    this.CONSUME(Equals);
-    this.CONSUME(Text);
-    this.CONSUME(Newline);
-    this.MANY({
-        // keep iterating unless the next two tokens are OpenBracket followed by TagClose" 
-        // i.e. stop when we're about to hit [/
-        GATE: () => this.LA(1).tokenType !== OpenBracket || this.LA(2).tokenType !== TagClose,
-        DEF: () => this.SUBRULE(this.statement)
+    matchBranch = this.RULE("matchBranch", () => {
+        this.CONSUME(Equals);
+        this.CONSUME(Text);
+        this.CONSUME(Newline);
+        this.MANY(() => this.SUBRULE(this.statement));
     });
-});
 }

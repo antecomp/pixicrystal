@@ -8,6 +8,7 @@ import { DialogueLexer } from "./lexer";
 import { DialogueParser } from "./parser";
 import flatten from "./processor";
 import { DialogueVisitor } from "./visitor";
+
 const parser = new DialogueParser();
 const visitor = new DialogueVisitor();
 
@@ -17,7 +18,7 @@ export function compileBnyDialogue(raw: string, debug = true): DialogueNode | nu
     const begin = performance.now();
     console.log("𑣲₍ ᐢ. .ᐢ₎ : Compiling .bny dialogue...");
 
-    const lexResult = DialogueLexer.tokenize(raw);
+    const lexResult = DialogueLexer.tokenize(raw.trim());
     if (lexResult.errors.length > 0) {
         console.error("Lex errors:", lexResult.errors);
         return null;
