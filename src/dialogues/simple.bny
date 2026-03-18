@@ -32,16 +32,20 @@ Aaaaa
 # Well thats it for this test... <face:soft_frown> <signal:hitend> <signal:bonus>
 # Just always loop-back to the beginning so we can test the other options.
 
-# [block:ta]
-# Blah blah blah
-# [/block]
+[block:ta]
+Blah blah blah
+[/block]
 Fallback
 This will run a condition
 [match:check]
     =result1
         I detect result 1
+        This like any other sequence
+        -> wrapup
     =result2
         I detect result 2
+    =result3
+        ->ta
 [/match]
 [block:tx]
 Blah blah blah

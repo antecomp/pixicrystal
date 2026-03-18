@@ -17,7 +17,7 @@ export type TextTree = {
     optionBlock?: OptionTree[];     // present if followed by an option block
 };
 
-export type NodeTree = TextTree | GotoTree;
+export type NodeTree = TextTree | GotoTree | SkipBlockTree | MatchBlockTree;
 
 export type OptionTree = {
     text: string;
