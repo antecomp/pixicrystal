@@ -4,7 +4,7 @@ statement   -> textNode | goto | skipBlock
 goto        → Goto Text Newline?
 textNode    → (Label Text Newline)? Text (optionBlock | Newline matchBlock | Newline?) 
 optionBlock → BlockOpen Newline choice+ BlockClose Newline?
-choice      → Option Text (optionBlock | matchBlock | Newline statement*)
+choice      → Option Text (optionBlock | Newline matchBlock | Newline statement*)
 skipBlock   → SkipBlockOpen Text CloseBracket Newline statement* SkipBlockClose Newline?
 matchBlock  → MatchBlockOpen Text CloseBracket Newline matchBranch+ MatchBlockClose Newline? matchBlock?
 matchBranch → Equals Text Newline (matchBlock |statement)*
@@ -82,12 +82,15 @@ export class DialogueParser extends CstParser {
         this.OR([
             // Must be immediately followed by optionBlock (no newline)
             { ALT: () => this.SUBRULE(this.optionBlock) },
-            // Can be immediately followed by matchBlock (may remove)
-            { ALT: () => this.SUBRULE(this.matchBlock) },
+            // Followed by a match block, requires newline
+            { ALT: () => {
+                this.CONSUME(Newline)
+                this.SUBRULE(this.matchBlock)
+            } },
             // Remaining statements require a new line break to distinguish between option text
             {
                 ALT: () => {
-                    this.CONSUME(Newline)
+                    this.CONSUME2(Newline)
                     this.MANY(() => this.SUBRULE(this.statement))
                 }
             }

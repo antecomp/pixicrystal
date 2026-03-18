@@ -1,0 +1,40 @@
+Hello, <face:neu_neu>
+Welcome to the branch test.
+Below will branch on the 'test' condition.
+[match:test]
+    =a
+        We detected a!
+    =b
+        We should not see this
+[/match]
+This is now the fallback of the match.
+Let's go into the next test.
+Can we match in an option? {
+    ?: I hope so! 
+        [match:testb]
+            =b
+                Detected b!
+            =c
+                We should no see this.
+        [/match]
+}
+This is a fallback for the option, hopefully the match falls into this too!
+Next, lets make sure our match just runs into the fallback when nothing hits.
+[match:testx]
+    =y
+        We should not see this
+    =a
+        We should not see this either
+[/match]
+This is the fallback we should see!
+Can a match lead to a goto?
+[match:test]
+    =a
+        -> onA
+    =b
+        How.
+[/match]
+Fallback we should not see
+
+@onA
+This is the result of the goto we should hit.

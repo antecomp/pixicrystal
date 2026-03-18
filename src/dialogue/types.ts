@@ -9,7 +9,7 @@ export type DialogueOption = {
 export type DialogueMatch = {
     on: string,
     matches: {
-        [match: string]: DialogueNode | DialogueMatch
+        [match: string]: DialogueNode | DialogueMatch | undefined
     }
     fallback?:
         | DialogueNode // fallback to some dialogue node on no match
