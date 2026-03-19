@@ -446,11 +446,12 @@ describe('option and match combinations', () => {
                     Match result
             [/match]
             After
-        `);
+    `);
         const enter = choose(root, 'Enter');
-        const inner = choose(enter, 'Inner option');
-        // inner option should lead to match, not After directly
-        expect('match' in inner).toBe(true);
+        if (!('options' in enter)) throw new Error('Node has no options');
+        const innerOpt = enter.options.find(o => o.text === 'Inner option');
+        expect(innerOpt).toBeDefined();
+        expect('match' in innerOpt!).toBe(true);
     });
 
     it('chained blockMatch', () => {
