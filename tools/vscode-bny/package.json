@@ -30,6 +30,12 @@
         "scopeName": "source.bny",
         "path": "./syntaxes/bny.tmLanguage.json"
       }
+    ],
+    "snippets": [
+      {
+        "language": "bny",
+        "path": "./snippets.json"
+      }
     ]
   }
 }

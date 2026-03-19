@@ -6,6 +6,7 @@ Included:
 
 - syntax highlighting for comments, labels, gotos, option markers, skip blocks, match blocks, match cases, braces, directives, and `$variables`
 - bracket matching and auto-closing for `{}` and `<>`
+- snippets for `match` and `block`
 - `.bny` file association
 
 ## Use it locally
@@ -19,3 +20,15 @@ tools/vscode-bny
 ```
 
 For extension development, you can also open this folder directly in VS Code and press `F5` to launch an Extension Development Host.
+
+As a suggestion, you should also add this to your settings.json to reduce autocomplete noise:
+```
+{
+  "[bny]": {
+    "editor.snippetSuggestions": "top",
+    "editor.suggestSelection": "first",
+    "editor.tabCompletion": "onlySnippets",
+    "editor.wordBasedSuggestions": "off"
+  }
+}
+```
