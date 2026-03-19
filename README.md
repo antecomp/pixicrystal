@@ -263,8 +263,7 @@ The compile function returns the DialogueNode at the "start" of this graph corre
 -------------------------------------------------------
 
 ### TODO
-* Allow options to chain into matches as a "fallback"
-* Extensive general testing (should have started with this but game jams call for me not to waste a few hours writing tests)
+* MORE TESTS. THERE ARE BUGS I CAN FEEL THEM CRAWLING AROUND AT NIGHT. I KNOW THEY ARE THERE.
 * After the game jam, maybe a "set" directive to have some default dialogue-owned stuff for matches without needing to set up a backend.
 * After the game jam, to make this general, add a "speaker" property to.
     * I think a `speaker: text` syntax for lines would work well here! Keep a similar inherit behavior to faces.

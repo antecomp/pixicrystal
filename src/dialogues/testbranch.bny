@@ -1,6 +1,13 @@
 Hello, $name <face:neu_neu>
--> xxxdone
 Welcome to the branch test.
+Where are we going? {
+    ?: silly
+        -> xxxdone
+    ?: start
+    ?: gentest then start
+        This is a quick sequence before we move on.
+        blah blah blah
+}
 Below will branch on the 'test' condition.
 [match:test]
     =a

@@ -176,42 +176,52 @@ function flattenSequence(
         if (node.label) labels[node.label] = node.id;
 
         if (node.optionBlock) {
-            // Build blockMatch chain first if present.
+
+            const unlinked: UnlinkedNode = {
+                id: node.id,
+                text: node.text,
+                options: [] // Placeholder, read comment below.
+            };
+
+            nodes.push(unlinked);
+
+            // Build blockMatch chain if present. Also must be after so new nodes pushed after.
             const blockChain = node.blockMatch
                 ? buildMatch(node.blockMatch, nextRef, null, nodes, labels)
                 : null;
 
-            const unlinked: UnlinkedNode = {
-                id: node.id,
-                text: node.text,
-                options: flattenOptionBlock(
-                    node.optionBlock, 
-                    node.text, 
-                    nextRef ?? fallback, // best available fallback 
-                    blockChain ?? chain, // best available chain 
-                    nodes, 
-                    labels
-                )
-            };
-
-            nodes.push(unlinked);
+            // Populate unlinked node with options after-the-fact, 
+            // to prevent accidentally placing the option nodes before it in the sequence 
+            // Fixes a bug with an option as root.
             if (!firstRef) firstRef = idRef(node.id);
+            unlinked.options = flattenOptionBlock(
+                node.optionBlock,
+                node.text,
+                nextRef ?? fallback, // best available fallback 
+                blockChain ?? chain, // best available chain 
+                nodes,
+                labels
+            )
+
             continue;
         }
 
         if (node.match) {
-            const builtMatch = buildMatch(node.match, nextRef, isLast ? chain : null, nodes, labels);
-            // Only extend with chain if match has no fallback already
-            if (isLast && chain && !builtMatch.fallback) {
-                builtMatch.fallback = chain;
-            }
             const unlinked: UnlinkedNode = {
                 id: node.id,
                 text: node.text,
-                match: builtMatch
+                match: {} as UnlinkedMatch // placeholder, se below.
             };
+
             nodes.push(unlinked);
             if (!firstRef) firstRef = idRef(node.id);
+
+            // Populate after pushing to prevent branch nodes appearing before owner in sequence
+            unlinked.match = buildMatch(node.match, nextRef ?? fallback, isLast ? chain : null, nodes, labels);
+            if (isLast && chain && !unlinked.match.fallback) {
+                unlinked.match.fallback = chain;
+            }
+
             continue;
         }
 
