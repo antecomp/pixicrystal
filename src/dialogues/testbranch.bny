@@ -1,5 +1,5 @@
-#Hello, $name <face:neu_neu>
-#Welcome to the branch test.
+Hello, $name <face:neu_neu>
+Welcome to the branch test.
 Where are we going? {
     ?: silly
         -> xxxdone

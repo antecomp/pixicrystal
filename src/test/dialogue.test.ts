@@ -144,7 +144,7 @@ describe('option blocks', () => {
         const jump = choose(root, 'Jump');
         expect(jump.text).toBe('End');
         const stay = choose(root, 'Stay');
-        expect(trace(stay)).toEqual(['Here', 'Fallback']);
+        expect(trace(stay)).toEqual(['Here', 'Fallback', 'End']);
     });
 
     it('empty option branch uses fallback', () => {
