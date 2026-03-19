@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { compileBnyDialogue } from '../dialogue/compilebny';
 import { DialogueNode, DialogueMatch } from '../dialogue/types';
 
@@ -479,3 +479,15 @@ describe('option and match combinations', () => {
     });
 });
 
+describe('error cases', () => {
+    it('unresolved label throws', () => {
+        expect(() => compile(`
+            egg
+            -> nowhere`)).toThrow('Unresolved label');
+    });
+
+    it('empty dialogue returns null', () => {
+        const result = compileBnyDialogue('', false);
+        expect(result).toBeNull();
+    });
+});
