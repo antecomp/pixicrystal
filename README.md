@@ -264,7 +264,6 @@ The compile function returns the DialogueNode at the "start" of this graph corre
 
 ### TODO
 * Allow options to chain into matches as a "fallback"
-* Test the chaining edge cases when when blocks owned by sequence, rather than as a direct child.
 * Extensive general testing (should have started with this but game jams call for me not to waste a few hours writing tests)
 * After the game jam, maybe a "set" directive to have some default dialogue-owned stuff for matches without needing to set up a backend.
 * After the game jam, to make this general, add a "speaker" property to.

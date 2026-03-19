@@ -27,7 +27,7 @@ export type MatchTree = {
 export type MatchBranch = {
     value: string;
     body: NodeTree[];
-    match: MatchTree | undefined // nested match.
+    nestedMatch: MatchTree | undefined // nested match.
 };
 
 export type OptionTree = {
@@ -152,7 +152,7 @@ export class DialogueVisitor extends BaseVisitor {
         return {
             value: ctx.Text[0].image.trim(),
             body: (ctx.statement ?? []).map((s: any) => this.visit(s)),
-            match: ctx.matchBlock ? this.visit(ctx.matchBlock[0]) : undefined
+            nestedMatch: ctx.matchBlock ? this.visit(ctx.matchBlock[0]) : undefined
         };
     }
 

@@ -72,8 +72,8 @@ function collectLabelsFromMatch(match: MatchTree): Record<string, string> {
     const labels: Record<string, string> = {};
     for (const branch of match.branches) {
         Object.assign(labels, collectLabels(branch.body));
-        if (branch.match) {
-            Object.assign(labels, collectLabelsFromMatch(branch.match));
+        if (branch.nestedMatch) {
+            Object.assign(labels, collectLabelsFromMatch(branch.nestedMatch));
         }
     }
     if (match.chained) {
@@ -118,14 +118,24 @@ function buildMatch(
     const branches: Record<string, NodeRef | UnlinkedMatch> = {};
 
     for (const branch of match.branches) {
-        if (branch.match) {
-            // Pass branchChain so nested matches can escape upward through chains
-            branches[branch.value] = buildMatch(branch.match, fallback, branchChain, nodes, labels);
+        if (branch.nestedMatch) {
+            // Build nested match first, then pass it as chain to body sequence.
+            const unlinkedNestedMatch = buildMatch(branch.nestedMatch, fallback, branchChain, nodes, labels);
+            if(branch.body.length > 0) {
+                // Body exists, flatten it with nested match as chain.
+                const result = flattenSequence(branch.body, fallback, unlinkedNestedMatch, nodes, labels);
+                branches[branch.value] = result ?? unlinkedNestedMatch;
+            } else {
+                // No body - go straight to nested match
+                branches[branch.value] = unlinkedNestedMatch;
+            }
             continue;
         }
 
-        const result = flattenSequence(branch.body, fallback, nodes, labels);
-        branches[branch.value] = result ?? fallback ?? (() => { throw new Error("buildMatch: no branch ref") })();
+        const result = flattenSequence(branch.body, fallback, branchChain, nodes, labels);
+        const branchRef = result ?? fallback;
+        if(!branchRef && !branchChain) throw new Error("buildMatch: no branch ref or chain");
+        branches[branch.value] = branchRef ?? branchChain!;
     }
 
     return {
@@ -139,6 +149,7 @@ function buildMatch(
 function flattenSequence(
     sequence: NodeTree[],
     fallback: NodeRef | null,
+    chain: UnlinkedMatch | null,
     nodes: UnlinkedNode[],
     labels: Record<string, string>
 ): NodeRef | null {
@@ -153,13 +164,14 @@ function flattenSequence(
             // Transparent to surrounding chain.
             // Body gets flattened with surrounding next as fallback.
             const bodyFallback = buildNextRef(sequence, i + 1, fallback);
-            const bodyFirst = flattenSequence(node.body, bodyFallback, nodes, labels);
+            const bodyFirst = flattenSequence(node.body, bodyFallback, null, nodes, labels);
             // Register label pointer at first node of body.
             if (bodyFirst?.kind === 'id') labels[node.label] = bodyFirst.value;
             continue;
         }
 
         const nextRef = buildNextRef(sequence, i + 1, fallback);
+        const isLast = buildNextRef(sequence, i + 1, null) === null;
 
         if (node.label) labels[node.label] = node.id;
 
@@ -175,22 +187,45 @@ function flattenSequence(
         }
 
         if (node.match) {
+            const builtMatch = buildMatch(node.match, nextRef, isLast ? chain : null, nodes, labels);
+            // Only extend with chain if match has no fallback already
+            if(isLast && chain && !builtMatch.fallback) {
+                builtMatch.fallback = chain;
+            }
             const unlinked: UnlinkedNode = {
                 id: node.id,
                 text: node.text,
-                match: buildMatch(node.match, nextRef, null, nodes, labels)
+                match: builtMatch
             };
             nodes.push(unlinked);
-            if (!firstRef) firstRef = idRef(node.id);
+            if(!firstRef) firstRef = idRef(node.id);
             continue;
         }
 
         // Plain
-        const unlinked: UnlinkedNode = {
-            id: node.id,
-            text: node.text,
-            next: nextRef
-        };
+        // Priority: nextRef > fallback > chain
+        let unlinked: UnlinkedNode;
+        if(nextRef || fallback) {
+            unlinked = {
+                id: node.id,
+                text: node.text,
+                next: nextRef ?? fallback
+            }
+        } else if (isLast && chain) {
+            // Nothing else available: use chain as match
+            unlinked = {
+                id: node.id,
+                text: node.text,
+                match: chain
+            };
+        } else { // end
+            unlinked = {
+                id: node.id,
+                text: node.text,
+                next: null
+            }
+        }
+
         nodes.push(unlinked);
         if (!firstRef) firstRef = idRef(node.id);
     }
@@ -233,7 +268,7 @@ function flattenOptionBlock(
         }
 
         // Normal branch
-        const firstRef = flattenSequence(option.branch, fallback, nodes, labels);
+        const firstRef = flattenSequence(option.branch, fallback, null, nodes, labels);
         return { text: option.text, next: firstRef ?? fallback };
     });
 }
@@ -287,7 +322,7 @@ export function flatten(tree: NodeTree[]): UnlinkedNode[] {
     const nodes: UnlinkedNode[] = [];
     const labels = collectLabels(tree);
 
-    flattenSequence(tree, null, nodes, labels);
+    flattenSequence(tree, null, null, nodes, labels);
     resolveLabels(nodes, labels);
 
     return nodes;

@@ -58,7 +58,6 @@ And what about nested matches?
 Also have a fallback here, our nested match should connect.
 Lastly, the weirdest edge case. Sometimes we might have a nested match that is chained.
 # In this case, the nested match should fallback/treat the outers chain as it's own chain too...
-# Right now, however, it instead just hits the "And then" not the chained match.
 [match:test]
     =a
         # We should enter this test, but then it will fail and should chain to the outers chain...
@@ -72,6 +71,39 @@ Lastly, the weirdest edge case. Sometimes we might have a nested match that is c
         We should hit this b detect
 [/match]
 And *then* this is the last fallback for this annoying thing.
+But alas, that last test is if the matches are directly owned by the cases. What happens when there's a sequence first?
+[match:test]
+    =a
+        Wow we're in a right now, 
+        but then there's a sequence
+        and only now there's a nested match...
+        [match:testx]
+            =fail
+                We should not see this
+        [/match]
+[/match]
+[match:testb]
+    =b
+        We should hit this b from our chain.
+[/match]
+Similar, final fallback for everything here.
+We should also make sure the match fallback inheritance also works when at the end of an option stream. {
+    ?: Agreed & Match that passes
+        Alright, here is the sequence.
+        Match time.
+        [match:test]
+            =a
+                (correct) match hit a here.
+        [/match]
+    ?: Agreed & Match that fails
+        Okay, sequence here.
+        Match time.
+        [match:test]
+            =fail
+                We should not see this
+        [/match]
+}
+This is the fallback of the option, the match should still hit this.
 While we are here, we should also test the skip block
 [block:xxx]
 and this second
