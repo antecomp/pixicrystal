@@ -7,7 +7,7 @@ import { createDisplacementFilter, createNoiseFilter } from './filters';
 import { TextStyle } from 'pixi.js';
 import { createCrossFadingTextDisplay } from './text';
 
-import input from './dialogues/testbranch.bny?raw'
+import input from './dialogues/example.bny?raw'
 import { compileBnyDialogue } from './dialogue/compilebny';
 import createDialogueRunner from './dialogue/runner';
 import createOptionsOverlay from './options';
@@ -50,7 +50,8 @@ async function main() {
   const PLACEHOLDERFUNCS: Record<string, () => string> = {
     test: () => "a",
     testb: () => "b",
-    testx: () => "x"
+    testx: () => "x",
+    dragonstate: () => 'alive'
   }
 
   const runner = createDialogueRunner(root, { responseText, optionsOverlay, face }, PLACEHOLDERFUNCS, { name: 'Omni' });

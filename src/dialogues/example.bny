@@ -1,0 +1,29 @@
+Hello, $name. <face:neu_smile> 
+How can I help you? {
+    ?: Can I have the key to the castle?
+        [match:dragonstate]
+            =slain
+                Yes, here you go <signal:givekey>
+                ->newquest
+            =alive
+                No, you must first slay the dragon!
+            =resting
+                No, you must slay the dragon!
+                Now is a good time, he is hibernating...
+        [/match]
+    ?: I have a question
+        I will try my best {
+            ?: How long has the dragon tormented this village?
+                Since before I was born
+            ?: What is at the castle?
+                Riches.
+        }
+}
+Good luck out there, warrior.
+
+# bring out to block to prevent nesting hell above.
+# this block is skipped normally, but can be entered with a (-> newquest)
+[block:newquest]
+    Alas, now that you have the key.
+    You can move on to your next quest!
+[/block]

@@ -73,7 +73,7 @@ export class DialogueParser extends CstParser {
         this.CONSUME(Newline);
         this.MANY(() => this.SUBRULE(this.choice));
         this.CONSUME(BlockClose);
-        this.OPTION2(() => this.CONSUME2(Newline));  // optional trailing newline for EOF
+        this.OPTION2(() => this.CONSUME2(Newline)); 
         this.OPTION3(() => this.SUBRULE(this.matchBlock)); // options "fallback" is a match block. Owned by option instead of chained like other things.
     });
 
