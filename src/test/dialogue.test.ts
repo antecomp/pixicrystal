@@ -203,7 +203,7 @@ describe('option blocks', () => {
         `);
         //console.log(root)
         const next = ('next' in root) ? root.next : null;
-        if(!next) throw new Error("Root next not attached!")
+        if (!next) throw new Error("Root next not attached!")
         expect(optionTexts(next)).toEqual(['Good', 'Bad']);
         const good = choose(next, 'Good');
         expect(good.text).toBe('Great!');
@@ -248,5 +248,101 @@ describe('skip blocks', () => {
         const inside = root; // root is Inside since we goto skip
         expect(inside.text).toBe('Inside');
         expect(trace(inside)).toEqual(['Inside', 'After']);
+    });
+});
+
+describe('match blocks', () => {
+    it('basic match routes to correct branch', () => {
+        const root = compile(`
+            Check this
+            [match:func]
+                =a
+                    Got A
+                =b
+                    Got B
+            [/match]
+            After
+        `);
+        expect('match' in root).toBe(true);
+        const a = navigateMatch(root, 'a') as DialogueNode;
+        expect(a.text).toBe('Got A');
+        expect(trace(a)).toEqual(['Got A', 'After']);
+    });
+
+    it('match with no result uses fallback node', () => {
+        const root = compile(`
+            Check
+            [match:func]
+                =a
+                    Got A
+            [/match]
+            Fallback
+        `);
+        const match = (root as any).match as DialogueMatch;
+        expect(match.fallback).toBeDefined();
+        const fallback = match.fallback as DialogueNode;
+        expect(fallback.text).toBe('Fallback');
+    });
+
+    it('chained match tries next match on failure', () => {
+        const root = compile(`
+            Check
+            [match:funcA]
+                =a
+                    Got A from first
+            [/match]
+            [match:funcB]
+                =b
+                    Got B from chain
+            [/match]
+            Final fallback
+        `);
+        const matchA = (root as any).match as DialogueMatch;
+        expect(matchA.fallback).toBeDefined();
+        const chainB = matchA.fallback as DialogueMatch;
+        expect(chainB.on).toBe('funcB');
+    });
+
+    it('match branch with sequence then nested match', () => {
+        const root = compile(`
+            Check
+            [match:funcA]
+                =a
+                    Some text
+                    [match:funcB]
+                        =b
+                            Got B
+                    [/match]
+            [/match]
+            After
+        `);
+        const a = navigateMatch(root, 'a') as DialogueNode;
+        expect(a.text).toBe('Some text');
+        expect('match' in a).toBe(true);
+        const b = navigateMatch(a, 'b');
+        expect(trace(b as DialogueNode)).toEqual(['Got B', 'After']);
+    });
+
+    it('nested match escapes to parent chain on failure', () => {
+        const root = compile(`
+            Check
+            [match:funcA]
+                =a
+                    [match:funcX]
+                        =fail
+                            Should not see
+                    [/match]
+            [/match]
+            [match:funcB]
+                =b
+                    Got B via chain
+            [/match]
+            Final
+        `);
+        const matchA = (root as any).match as DialogueMatch;
+        const innerMatch = matchA.matches['a'] as DialogueMatch;
+        expect(innerMatch.fallback).toBeDefined();
+        const chainB = innerMatch.fallback as DialogueMatch;
+        expect(chainB.on).toBe('funcB');
     });
 });
