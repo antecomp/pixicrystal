@@ -184,7 +184,14 @@ function flattenSequence(
             const unlinked: UnlinkedNode = {
                 id: node.id,
                 text: node.text,
-                options: flattenOptionBlock(node.optionBlock, node.text, nextRef, blockChain, nodes, labels)
+                options: flattenOptionBlock(
+                    node.optionBlock, 
+                    node.text, 
+                    nextRef ?? fallback, // best available fallback 
+                    blockChain ?? chain, // best available chain 
+                    nodes, 
+                    labels
+                )
             };
 
             nodes.push(unlinked);

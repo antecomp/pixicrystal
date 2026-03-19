@@ -135,3 +135,30 @@ What about straight to a match? {
         We should see this.
 [/match]
 Then finally back to a normal node.
+Lets make sure our fixes didn't break normal fallbacks {
+    ?: Okay
+        Some text
+    ?: Okay (NR)
+}
+Normal fallback
+That we continue from here...
+Let's also make sure our gotos still win over everything. {
+    ?: Test
+        -> pasta
+}
+[match:test]
+    =a
+        This should be skipped
+[/match]
+@pasta
+We should go here!
+How about nested options? {
+    ?: enter inner
+        Inner prompt {
+            ?: inner option
+        }
+}
+[match:test]
+    =a
+        We should see this as a match fallback
+[/match]
