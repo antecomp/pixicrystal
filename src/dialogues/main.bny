@@ -14,7 +14,7 @@ Have you used a conduit before? {
 }
 
 
-# to do: Add very breif intro to worldbuild a bit better.
+# to do: Add very brief intro to world-build a bit better.
 Before establishing communication, know of these ground rules:
 @rules
 1. Do not ask them about the afterlife.
@@ -35,6 +35,8 @@ Do you understand these terms? {
             #     -> gameover
         }
 }
+
+# ------ Phase 1: Establish The Gameplay Loop + Minor Strange Tension.
 Terms accepted.
 @start
 Who do you wish to speak to? {
@@ -53,6 +55,7 @@ Hey, it has been a while  <face:neu_smile> {
         I- <face:concern_sfrown>
         ->gameover
     ?: It is good to see you.
+        It is good to be seen.
 }
 I missed you, where have you been? <face:neu_sfrown> {
     ?: You died.
@@ -62,10 +65,10 @@ I missed you, where have you been? <face:neu_sfrown> {
             ?: I couldn't.
                 Why not? {
                     ?: The technology did not exist yet.
-                        The technology?
+                        The technology? <face:neu_concern>
                         What are you talking about?
-                        Are you not here? 
-                        Why are you so fuzzy?
+                        Are you not here? <face:concern_tfrown>
+                        Why can't I see you?
                         Why are you-
                         -> gameover
                     ?: Life moves on... {
@@ -110,6 +113,41 @@ I missed you, where have you been? <face:neu_sfrown> {
         -> whynotearlier
 }
 
+# --- Phase 2: Some basic conversations and reminiscing to establish a "baseline"
+# Player should be able to "run through" this a few times to collect background information.
+
+# do I really want this lame small-talk here? How do I get into phase 2 naturally?
+How have you been? {
+    ?: Good
+        That is good to hear.
+    ?: (TEST) CONFRONT.
+        -> confront
+}
+
+# -- Phase 3: Contradictions - Continue conversations but introduce things that do not align with earlier info.
+# You can use variables to explicitly flag the things the PC would have noticed.
+
+# --- Phase 4 Final Confrontation - True ending.
+[block:confront]
+    What are you trying to imply here? <face:anger_sfrown> {
+        ?: What is your name?
+            [match:is_name_shared]
+                =yes
+                    Are you fucking kidding me? <face:anger_grimace>
+                    $hername. <face:anger_sfrown>
+                    What is this about?
+                =no
+                    Is this some sort of joke? <face:anger_grimace> {
+                        ?: Just tell me what your name is.
+                            # Maybe something more deflective/defensive here. 
+                            # Make it very clear that she truly does not know.
+                            No, not until you explain what is going on here!
+                    }
+            [/match]
+    }
+[/block]
+
+# --- Default game-over that we can jump to from essentially anywhere.
 [block:gameover]
     # make sure you reset game state on gameover so the try again is truly fresh.
     SESSION TERMINATED <signal:gameover> <face:error> {

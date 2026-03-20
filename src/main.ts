@@ -16,6 +16,10 @@ import pickRandom from './utils';
 
 export const CRYSTAL_BALL_RADIUS = 290;
 
+const DEFAULT_FLAGS = {
+  'nameshared': false as boolean
+} satisfies Record<string, string | boolean | number> // Only use primitives to make reset easy.
+
 export const TEXT_STYLE = new TextStyle({
   fontFamily: ['Georgia', 'serif'],
   fontSize: 28,
@@ -31,7 +35,7 @@ export const OPTION_STYLE = new TextStyle({
   fill: 0xffffff,
   align: 'center',
   wordWrap: true,
-  wordWrapWidth: CRYSTAL_BALL_RADIUS * 0.75    
+  wordWrapWidth: CRYSTAL_BALL_RADIUS * 0.75
 });
 
 const NAMES = ["Jasmine", "Ana", "Anaya", "Amy", "Lucy"]
@@ -59,26 +63,38 @@ async function main() {
   responseText.centerText(true, true, { x: 0, y: CRYSTAL_BALL_RADIUS / 1.6 });
   responseText.container.filters = [noiseFilter]
 
-  const MATCHES: Record<string, () => string> = {}
-
   const VARS: Record<string, string> = {
     hername: pickRandom(NAMES)
   }
 
+  let flags = { ...DEFAULT_FLAGS };
+
+  const MATCHES: Record<string, () => string> = {
+    'is_name_shared': () => flags.nameshared ? 'yes' : 'no'
+  }
+
+
+  ////////////////////////////////
+
   const runner = createDialogueRunner(
-    root, 
-    { responseText, optionsOverlay, face }, 
-    MATCHES, 
+    root,
+    { responseText, optionsOverlay, face },
+    MATCHES,
     VARS
   );
+
+  runner.addSignalListener('nameshared', () => { flags.nameshared = true })
 
   // Reset game state on gameover.
   runner.addSignalListener('gameover', () => {
     // Avoid using the same name twice on restart.
     const previousName = runner.readVar('hername')!;
     runner.setVar('hername', pickRandom(NAMES.filter(n => n !== previousName)));
+
+    // Reset flags.
+    flags = { ...DEFAULT_FLAGS }
   })
-  
+
   crystalBall.ball.on('pointertap', runner.proceed);
   runner.start();
 

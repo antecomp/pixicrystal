@@ -263,6 +263,7 @@ The compile function returns the DialogueNode at the "start" of this graph corre
 -------------------------------------------------------
 
 ### TODO
+* Permit a "general" signal listener that can just receive all signals and do whatever with them, for arbitrary implementations/uses.
 * Move label collection to visitor to remove redundant second pass through dialogue tree.
 * MORE TESTS. THERE ARE BUGS I CAN FEEL THEM CRAWLING AROUND AT NIGHT. I KNOW THEY ARE THERE.
 * After the game jam, maybe a "set" directive to have some default dialogue-owned stuff for matches without needing to set up a backend.
