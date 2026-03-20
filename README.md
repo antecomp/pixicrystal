@@ -7,7 +7,8 @@ Made using PixiJS, Vite & Tauri.
 Because I am utterly insane I took this as an opportunity to create my own custom dialogue language parser using [chevrotain](https://chevrotain.io/docs/).
 
 ## Runtime Usage
-(TODO, still working on the runner API)
+Right now the shape is also over-fit to this implementation. 
+Hopefully I will make something more general later.
 
 ## Writing Dialogue
 The syntax is pretty simple...
@@ -159,8 +160,6 @@ Matches can also be nested or chained. A nested match allows you to enforce mult
 [/match]
 ```
 
-NOTE: Currently, matches cannot function as fallbacks for options. I might patch that in later.
-
 Actually configuring these checks the matches can run is done by supplying the dialogueRunner with `matchFuncs`:
 ```ts
 type MatchFuncs = Record<string, () => string>
@@ -228,8 +227,6 @@ runner.setVar('name', name);
 // Works the same, now "Hello, $name" will read out "Hello, Rabbit."
 ```
 
-> Note: Variables (currently) cannot be used for option text, only normal lines of dialogue.
-
 > Actually setting and working with these variables is the responsibility of the dialogue runner and not the parsing algorithm, this is to keep things slightly more implementation agnostic and not have any state creep into the compiler.
 
 
@@ -280,7 +277,7 @@ It currently highlights:
 - labels like `@start`
 - gotos like `-> start`
 - option markers like `?:`
-- block braces
+- block braces (match and block)
 - directives like `<face:neu_smile>`
 
 To try it locally, open that folder in VS Code and run an Extension Development Host with `F5`, or package/install it as a normal extension.

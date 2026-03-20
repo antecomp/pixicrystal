@@ -13,7 +13,7 @@
     "withGlobalTauri": true,
     "windows": [
       {
-        "title": "crystal",
+        "title": "The Conduit",
         "width": 1300,
         "height": 750
       }
