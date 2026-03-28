@@ -128,6 +128,7 @@ You used to just stand there-
 For it all to make sense to you.
 Even when I asked you simple things. {
     ?: Like what?
+    # TODO: Change this to avoid double "I don't remember"
     ?: I don't remember that.
         You don't? <face:concern_tfrown>
         It was...
@@ -202,7 +203,9 @@ We always sat at the same spot, right? {
                 # SIGNAL: Vague, just not in a lame "idk" way -- she gains no insight about you from this.
                 Aw...
                 You were always so thoughtful.
-                # TODO: Write this transition out...
+                # TODO: rewrite below - trying to link back to indecisiveness desc above. 
+                I imagine your procrastination was for me too.
+                Like with-
                 -> house
             ?: It was brighter. {
                 ?: That place always had dim lights- {
@@ -223,8 +226,8 @@ We always sat at the same spot, right? {
         }
     # TODO: Workshop this branch. Should highlight the decay theme better.
     ?: Wherever we could.
-        # Have this stupid line because my parser is broken rn
-        # and doesnt work for ?: -> match
+        # Have this stupid line because my parser
+        # doesnt work for ?: -> match ( even through it should >:( )
         Wherever...
         [match:cafe_mentioned]
             =true
@@ -262,14 +265,23 @@ The one by the lake,
 You took your time deciding on that one...
 Like you always did. {
     ?: I had that one before I met you.
-        # How does she react to this?
-        # Oh, well...
-        # It felt like ours.
-        # That is how I remember it.
+        Oh.
+        well...
+        It felt like ours.
+        That is how I remember it.
         # Make this option key to unlocking confrontation?
-    # TODO: Go along with it answer
     ?: (Say Nothing)
+        # TODO: More?
+        ... <face:neu_smile>
 }
+I miss that place.
+# Lead into memory recollection here...
+# Traits to go off of:
+# - Café (exists): Maybe mentioning the houses proximity to it?
+# - Café window: Office had a window?
+# - Café window reason (light): Office window reason would match.
+# - The above knowledge of the house location: General point of contention later.
+
 # Recall house, using hints (or lackthereof) from above...
 
 # --- Phase 4 Final Confrontation, True Ending or False Ending
