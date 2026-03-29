@@ -3,7 +3,7 @@ Click here to begin. <face:eye_closed>
 Welcome to the Conduit. <face:eye_open>
 The conduit connects you with those who have passed.
 
-# Make sure to remove ALL of this after, this is just so I can skip shit.
+# TODO: Make sure to remove ALL of this after, this is just so I can skip shit.
 Have you used a conduit before? {
     ?: Yes
         -> start
@@ -13,12 +13,6 @@ Have you used a conduit before? {
         -> whynotearlier
 }
 
-# At the very end just sprinkle in routes that break these rules.
-# Don't try and bend the narrative around it. You can just make some pitfalls.
-
-# TODO: I am sick of these "you were" lines everywhere. rework them.
-
-# TODO: Add very brief intro to world-build a bit better.
 Before establishing communication, know of these ground rules:
 @rules
 1. Do not ask them about the afterlife.
@@ -45,8 +39,10 @@ Who do you wish to speak to? {
     ?: My wife
         Establishing connection...
     ?: My wife, $hername.
-        Establishing connection <signal:nameshared>
+        Establishing connection... <signal:nameshared>
 }
+Please remain calm. 
+Your consciousness is now being mapped to the target's vestige...
 ... <face:clo_neu> {
     ?: Hey.
 }
@@ -159,8 +155,6 @@ Like you could pick wrong. {
     ?: "What to pair with it...?"
         Huh? {
             ?: I don't drink.
-                # SIGNAL: contradiction? 
-                # or at least one that could also just be a misunderstanding
                 Oh, I meant uh-
                 nevermind.
                 ...
@@ -188,11 +182,9 @@ We would always go to that one place... {
         Yeah, we did. <face:clo_smile>
         But this place more than anywhere else.
 }
- # TODO IF CAFE: "I dont think we should talk about this place..." (maybe she died here, a path to breaking one of the rules?)
+ # TODO IF CAFE: Player says "I dont think we should talk about this place..." (maybe she died here, a path to breaking one of the rules?)
 ...
 I can still picture it. <face:clo_grin>
-# Feel free to change this. I want something said confidently that will be contested later.
-# TODO: Consider branching this recollection based on player answer above, too.
 The view of the city, the port in the distance...
 ...
 We always sat at the same spot, right? {
@@ -214,19 +206,17 @@ We always sat at the same spot, right? {
                     ?: -and I wanted to actually see the menu.
                         # SIGNAL: By the window and why.
                         # TODO: Workshop this?
-                        Right!
+                        Haha, right!
+                        The light seemed to make you less tense.
                         You always needed to see things clearly.
-                        Made your decisions easier.
                         Even when it was just picking what to eat!
                         ...
-                        Everything you did,
-                        it always felt deliberate.
+                        Nothing with you ever felt careless.
                         Like-
                         -> house
                 }
             }
         }
-    # TODO: Workshop this branch. Should highlight the decay theme better.
     ?: Wherever we could.
         # Have this stupid line because my parser
         # doesnt work for ?: -> match ( even through it should >:( )
@@ -234,7 +224,6 @@ We always sat at the same spot, right? {
         [match:cafe_mentioned]
             =true
                 Yeah, that place was always busy.
-                Right?
             =false
                 No... that's not right.
                 Do you know where I am talking about? {
@@ -301,12 +290,11 @@ Or maybe just how it felt.
         Especially you, 
         You would never close the blinds.
         Then each morning you'd spring up with the sun.
-        # too floofy? too nonsensical?
-        Like a flower.
-        You certainly made me a more lively person too...
+        That certainly made me a more lively person too...
         I could sleep for days,
         without you to wake me up.
         Or to keep me going...
+        ...
     =false
         # Try to make this description less descriptive too
         # Without any prompting, she essentially is making this all up.
@@ -338,7 +326,6 @@ then out the door...
         Felt like a continuation of our world,
         like we never left the house. {
             ?: That doesn't sound right...
-                # TODO: Soft resolve this if we did not call out the house thing earlier.
                 What?
                 That sounds... exactly right.
                 It's so clear to me.
@@ -373,8 +360,13 @@ then out the door...
                                             ?: We all misremember things.
                                                 Right...
                                                 Yeah, sorry.
-                                                # TODO: Transition into either the false ending
-                                                # Or the fallback block below...
+                                                I can remember it your way.
+                                                I can move the café wherever you want it.
+                                                ...
+                                                Can we keep talking about something else?
+                                                # TODO: Transition into a version of the sculptures ending. 
+                                                # Doesn't have to match the text of the ending block
+                                                # If something else would read better.
                                         }
                                     }
                                 }
@@ -406,9 +398,8 @@ That was the nice part.
  # I think these responses are too harsh right now. 
 # Should give more uncertainty than anger.
 # Confrontation ending
-# TODO: Write this out and make the ending hit.
 [block:confront]
-    What are you trying to imply here? <face:anger_sfrown> {
+    Why would you ask me that? <face:anger_sfrown> {
         ?: Please, just tell  me what your name is.
             [match:is_name_shared]
                 =yes
@@ -417,22 +408,26 @@ That was the nice part.
                     What is this about? {
                         ?: And what is my name?
                             # She cannot answer this.
-                            ...
-                            I-
-                            ...
-                            I know you.
-                            I just-
-                            Why can't it I-...
+                            -> pc_name
                     }
                 =no
                     Is this some sort of joke? <face:anger_grimace> {
                         ?: Just tell me what your name is.
-                            # Maybe something more deflective/defensive here. 
+                            # TODO: Maybe something more descriptive here.
                             # Make it very clear that she truly does not know.
-                            No, not until you explain what is going on here!
-                            # We can either jump straight to the full confront, or
-                            # try to warp this to the same "what is *my* name" setup as above.
-                            # Or, third option, make this branch have slightly different ending. (prob best)
+                            No, not until you explain what is going on here! {
+                                ?: This keeps happening. 
+                                    What keeps happening? {
+                                        ?: The lakehouse, the café. {
+                                            ?: Places that never belonged together. {
+                                                ?: You keep folding them into one memory. {
+                                                    ?: Do you not remember my name either?
+                                                        -> pc_name
+                                                }
+                                            }
+                                        }
+                                    }
+                            }
                     }
             # Follow-up by asking for *your* name. Cannot be answered.
             # Branch above is more just to teach the mechanic than to divert dialogue much...
@@ -456,7 +451,20 @@ That was the nice part.
     }
 [/block]
 
+[block:pc_name]
+    @pc_name
+    ...
+    You're-
+    ...
+    I know you.
+    I just-
+    Why can't I-...
+    -> ending_truth
+[/block]
+
 [block:ending_truth]
+    # TODO; This first line feels too blunt, like a "you win"
+    # Not an emotional defeat. Change it.
     Fine-
     Look, I don't remember your name.
     But I remember... you.
@@ -467,8 +475,8 @@ That was the nice part.
     ...
     I have been playing these moments back for so long.
     Over and over.
-    They don't feel separate anymore.
-    It's all just one big stream.
+    # TODO: Is this line too explicit to what is happening?
+    Everything has lost its clarity...
     Places keep folding into each other.
     Mornings into nights.
     Houses into cafés.
@@ -477,10 +485,9 @@ That was the nice part.
     I-
     I just wanted something new,
     Something I have not already memorized.
-    # TODO: Is this too corny? I feel like we could do something better.
     ...
-    Is it really you?
-    Or am I just remembering this conversation too?
+    Everything feels so worn down.
+    I am sorry this is all that's left of me.
     ENDING 2: FRAGMENTS <signal:ending> {
         ?: Play again?:
             -> intro
