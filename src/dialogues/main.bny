@@ -128,7 +128,7 @@ Take too long to say what you mean.
 You used to just stand there-
 -waiting for everything to click.
 For it all to make sense to you.
-Even when I asked you simple things. {
+Even when I asked you the simplest things. {
     ?: Like what?
     ?: I don't remember that.
         You don't? <face:concern_tfrown>
@@ -137,12 +137,13 @@ Even when I asked you simple things. {
 Anything, really.
 You always wanted the answer to be right. <face:clo_grin>
 When I met you, I thought you were just indecisive. <face:clo_smile>
-But no-
--you really would just take your time.
+But no,
+you really would just take your time.
 ...
 Remember how often we would have to send the waitress back? <face:cdev_grin>
 Because you still weren't ready to order.
 You would always ask a million questions about the food;
+# Another example here
 What to pair with it...
 You would stare at the menu like it mattered. <face:neu_smile>
 Like you could pick wrong. {
@@ -324,7 +325,7 @@ didn't we? {
 # The cafe was NOT near this house, but she will fasely put these two memories together.
 Yeah, haha.
 It all blurred together after a while,
-but I remember the routine of it.
+but I remember the order of it.
 Wake up,
 You would take your time getting ready-
 as always-
@@ -337,12 +338,14 @@ then out the door...
         Felt like a continuation of our world,
         like we never left the house. {
             ?: That doesn't sound right...
-                # Do we have a soft call-out here?
-                # TODO: Feel free to workshop thw wording here...
-                # Like a "that cafe wasn't at that house though..."
-                # Something to make it clear, but in a way we can recover from...
-                ...
-                It does to me.
+                # TODO: Soft resolve this if we did not call out the house thing earlier.
+                What?
+                That sounds... exactly right.
+                It's so clear to me.
+                The walk, that rickety door, the smell of coffee... {
+                    ?: That house wasn't near the café.
+                        # TODO: Lead into confrontation...
+                }
             ?: (Say nothing)
         }
     =false
@@ -356,22 +359,26 @@ Like we had already figured it out.
 Didn't have to think about anything.
 ...
 That was the nice part.
+# TODO: One more memory, this one only will show if we do not enter the confrontation...
 # Moving memory?
 # "I remember bringing boxes in..."
 # The idea is still that he owned this house before her
 # And she is blending memories of her limited stay with him there
 # With memories of other places they have lived...
-
+# Have this memory be the natural closure before the "follow" ending.
+# How do I nicely transition here?
 
 # --- Phase 4 Final Confrontation, True Ending or False Ending
  # I think these responses are too harsh right now. 
 # Should give more uncertainty than anger.
+# Confrontation ending
+# TODO: Write this out and make the ending hit.
 [block:confront]
     What are you trying to imply here? <face:anger_sfrown> {
         ?: What is your name?
             [match:is_name_shared]
                 =yes
-                    Are you fucking kidding me? <face:anger_grimace>
+                    What? <face:anger_grimace>
                     $hername. <face:anger_sfrown>
                     What is this about?
                 =no
@@ -389,9 +396,46 @@ That was the nice part.
     }
 [/block]
 
-# TODO: Another block for "bad" ending where we play along the whole time
+# Ending block, where you played along and fed into the memories.
 # "Stay a little longer."
 # "Help me remember the rest."
+[block:ending_lie]
+    It's been really nice talking to you.
+    I feel more like myself, now.
+    Please, stay a little longer.
+    Help me remember the rest.
+    ENDING 1: SCULPTURES <signal:ending> {
+        ?: Play again?:
+            -> intro
+    }
+[/block]
+
+[block:ending_truth]
+    Fine-
+    Look, I don't remember your name.
+    But I remember... you.
+    I remember how you made me feel.
+    It's just-
+    ...
+    I'm sorry.
+    ...
+    I have been playing these moments back for so long.
+    Over and over.
+    My life feel like it does not have chapters anymore,
+    It's all just one big stream.
+    ...
+    I-
+    I just wanted something new,
+    Something I have not already memorized.
+    # TODO: Is this too corny? I feel like we could do something better.
+    ...
+    Is it really you?
+    Or am I just remembering this conversation too?
+    ENDING 2: FRAGMENTS <signal:ending> {
+        ?: Play again?:
+            -> intro
+    }
+[/block]
 
 # --- Default game-over that we can jump to from essentially anywhere.
 [block:gameover]
