@@ -16,10 +16,9 @@ Have you used a conduit before? {
 Before establishing communication, know of these ground rules:
 @rules
 1. Do not ask them about the afterlife.
-2. Do not ask them about their surroundings or condition.
+2. Do not ask them about their state or existence.
 3. Do not ask about their death-
    -or the circumstances around their death.
-# more?
 Any of these will cause them major distress and will end the session.
 Do you understand these terms? {
     ?: Yes
@@ -108,6 +107,10 @@ I missed you, where have you been? <face:neu_sfrown> {
                 @missedsorry
                 It's okay. <face:soft_tfrown>
                 # should be the only possible exit out of this block.
+            ?: Have you been waiting this whole time?
+                Yes.
+                There is...
+                -> onlymemories
         }
     ?: It's hard to explain.
         Hard to explain what? That I am dead? <face:aclo_surprise>
@@ -283,7 +286,13 @@ Like you always did. {
         I know you do.
 }
 I miss that place.
-Or maybe just how it felt.
+Or maybe just how it felt. {
+    ?: I do too.
+    ?: Is that all that's left for you?
+        Please don't.
+        Don't make me answer that.
+        -> gameover
+}
 # Launching into house recollection, branches based on established info from earlier...
 [match:window_reason_given]
     =true
@@ -461,9 +470,16 @@ Hey, you know...
                                     What are you talking about? {
                                         ?: The lakehouse, the café. {
                                             ?: Places that never belonged together. {
-                                                ?: You keep folding them into one memory. {
-                                                    ?: Do you not remember my name either?
-                                                        -> pc_name
+                                                    ?: You keep folding them into one memory. {
+                                                        ?: Do you not remember my name either?
+                                                            -> pc_name
+                                                    ?: Do you actually remember these places?
+                                                        Stop!
+                                                        I am trying...
+                                                        Do you have any idea how hard this is?
+                                                        Do you think that I'm-
+                                                        I can't do this.
+                                                        -> gameover
                                                 }
                                             }
                                         }
