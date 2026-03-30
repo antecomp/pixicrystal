@@ -54,6 +54,12 @@ Hey, it has been a while  <face:neu_smile> {
         ->gameover
     ?: It is good to see you.
         It is good to be seen.
+    ?: Can you see me?
+        I-
+        Why can't I...
+        No.
+        Please don't ask me that.
+        -> gameover
 }
 I missed you, where have you been? <face:neu_sfrown> {
     ?: You died.
@@ -108,6 +114,11 @@ I missed you, where have you been? <face:neu_sfrown> {
         Do you think I can't tell?
         You know what I meant.
         -> whynotearlier
+    ?: Do you remember what happened?
+        No.
+        No no no-
+        Don't make me think about that.
+        -> gameover
 }
 
 # --- Phase 2: Some basic conversations and reminiscing to establish a "baseline"
@@ -252,17 +263,6 @@ The view of the city, the port in the distance...
 [/match]
 
 
-
-# -- Phase 3: Rebuilding. Established behaviors from above inform how she recalls this next memory.
-# Use established behaviors to determine how she talks about the house.
-# Use the house info as one explicit contradiction too (either that was before I met you, ...) <- similar trend just a factual mismatch, rather than behavior
-# If behavior confirmed, she incorporates it into the narrative here.
-# If the behavior is unknown, her description wavers here.
-# If you played along earlier, you lead into the false ending.
-# If you omitted info earlier, the house memory seems like nonsense, and will lead into the contradiction.
-
-
-# Have a general contradiction early to nicely establish the decay regardless of earlier setup.
 @house
 The house.
 ...
@@ -336,6 +336,7 @@ then out the door...
                         I remember the door,
                         that little bell above it.
                         The way you had to shove it for it to open...
+                        @begin_house_tension
                         ...
                         # Why are you trying to pull this apart?
                         [match:house_confronted]
@@ -349,6 +350,11 @@ then out the door...
                                                 What are you trying to imply here? {
                                                     ?: What is your name?
                                                         -> confront
+                                                    ?: What happened to you?
+                                                        Stop.
+                                                        I don't want to-
+                                                        Please, this isn't right...
+                                                        -> gameover
                                                 }
                                         }
                                 }
@@ -377,6 +383,10 @@ then out the door...
                                     }
                                 }
                         [/match]
+                    ?: Do you remember where the café was?
+                        I just told you-
+                        Near the house.
+                        -> begin_house_tension
                 }
             ?: (Say nothing)
         }
@@ -442,11 +452,11 @@ Hey, you know...
                 =false
                     Is this some sort of joke? <face:anger_grimace> {
                         ?: Just tell me.
-                                It's...
-                                ...
-                                I should-
-                                ...
-                                I should know... {
+                            It's...
+                            ...
+                            I should-
+                            ...
+                            I should know... {
                                 ?: This keeps happening. 
                                     What are you talking about? {
                                         ?: The lakehouse, the café. {
@@ -520,11 +530,9 @@ Hey, you know...
     ...
     I-
     I just wanted something new,
-    #Something I have not already memorized.
-    Something that hasn't been worn smooth.
+    Something I have not already recycled.
     ...
-    # Todo: maybe a better word than "doubtful" here?
-    Everything feels so doubtful down.
+    Everything feels so worn down.
     I am sorry this is all that's left of me.
     ENDING 2: FRAGMENTS <signal:ending> {
         ?: Play again?
@@ -532,13 +540,13 @@ Hey, you know...
     }
 [/block]
 
+# Capture for fallthroughs into gameover, hopefully we never see this
+# But I want to handle it gracefully just in case...
+What is...
 # --- Default game-over that we can jump to from essentially anywhere.
-[block:gameover]
-    # make sure you reset game state on gameover so the try again is truly fresh.
-    SESSION TERMINATED <signal:gameover> <face:error> {
-        ?: Try again
-            -> intro
-    }
-[/block]
-(Error, Fallout) <face:error>.
--> intro
+@gameover
+# make sure you reset game state on gameover so the try again is truly fresh.
+SESSION TERMINATED <signal:gameover> <face:error> {
+    ?: Try again
+        -> intro
+}
