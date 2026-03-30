@@ -67,7 +67,7 @@ I missed you. Where have you been? <face:neu_sfrown> {
                     ?: Life moves on... {
                         ?: It's not like I could just drop everything.
                         Oh, but it's so convenient now? <face:anger_sopen> {
-                            ?: That is not what I meant.
+                            ?: That's not what I meant!
                                 Then what did you mean?
                                 Let me explain something to you.
                                 I have been here, waiting.
@@ -86,7 +86,8 @@ I missed you. Where have you been? <face:neu_sfrown> {
                     ?: How do you know that?
                         Because- 
                         ...
-                        I have sat here waiting that whole time. <face:anger_sfrown>
+                        I have sat here, waiting...
+                        for all that time. <face:anger_sfrown>
                         @onlymemories
                         I can't do anything except entertain myself with memories. <face:neu_concern>
                         There is nothing else I can do but remember. 
@@ -202,7 +203,7 @@ The view of the city, the port in the distance...
                                 The light did seem to make you less tense. <face:neu_smile>
                                 Like things bothered you more when they were half-seen.
                                 Even there,
-                                with something a small as lunch. <face:cdev_grin>
+                                with something as small as lunch. <face:cdev_grin>
                                 ... <face:clo_sfrown>
                                 Nothing with you ever felt careless. <face:neu_smile>
                                 Like-
@@ -217,7 +218,7 @@ The view of the city, the port in the distance...
                 }
             ?: Wherever we could.
                 Sure. <face:neu_grin>
-                That was what you would say, anyway. <face:soft_tgrin>
+                That's what you would say, anyway. <face:soft_tgrin>
                 Like you didn't care.
                 But you'd still hesitate, <face:devious_tgrin>
                 and pick somewhere that felt right.
@@ -267,9 +268,8 @@ Like you always did. <face:neu_smile> {
         Oh. <signal:set_house_confronted> <face:concern_surprise>
         That doesn't-
         ... <face:concern_tfrown>
-        It felt like ours.
-        That is how I remember it.
-        # Make this option key to unlocking confrontation?
+        It felt like ours...
+        That's how I remember it.
     ?: (Say nothing)
         ... <face:neu_smile>
         You remember.
