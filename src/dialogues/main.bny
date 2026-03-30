@@ -3,16 +3,6 @@ Click here to begin. <face:eye_closed>
 Welcome to the Conduit. <face:eye_open>
 The conduit connects you with those who have passed.
 
-# TODO: Make sure to remove ALL of this after, this is just so I can skip shit.
-Have you used a conduit before? {
-    ?: Yes
-        -> start
-    ?: No
-    # change this out for whatever
-    ?: Yes, Debug
-        -> debug
-}
-
 Before establishing communication, know of these ground rules:
 @rules
 1. Do not ask them about the afterlife.
@@ -181,7 +171,7 @@ Made all our days more vivid. <face:soft_tgrin>
 ... <face:neu_concern>
 Especially at-
 ...
-@debug
+#@debug
 We would always go to that one place... {
     ?: The café?
         The café... <face:concern_surprise> <signal:set_cafe_mentioned>
