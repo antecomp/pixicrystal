@@ -13,7 +13,7 @@ Any of these will cause them major distress and will end the session.
 Do you understand these terms? {
     ?: Yes
     ?: No
-        You must accept these terms to continue,
+        You must accept these terms to continue.
         Do you need them to be reiterated? {
             ?: Yes
                 -> rules
@@ -30,12 +30,12 @@ Who do you wish to speak to? {
     ?: My wife, $hername.
         Establishing connection... <signal:set_name_shared>
 }
-Please remain calm. 
+Please wait... 
 Your consciousness is now being mapped to the target's vestige...
 ... <face:clo_neu> {
     ?: Hey.
 }
-Hey, it has been a while  <face:neu_smile> {
+Hey, it has been a while.  <face:neu_smile> {
     ?: How are you?
         I am... <face:concern_surprise>
         How... 
@@ -84,7 +84,7 @@ I missed you, where have you been? <face:neu_sfrown> {
             ?: It has not been that long.
                 Don't lie to me, it has been years... <face:anger_sopen> {
                     ?: How do you know that?
-                        Because I have sat here waiting that whole time, <face:anger_sfrown>
+                        Because I have sat here waiting that whole time. <face:anger_sfrown>
                         @onlymemories
                         I can't do anything except entertain myself with memories. <face:neu_concern>
                         There is nothing else I can do but remember. 
@@ -117,10 +117,6 @@ I missed you, where have you been? <face:neu_sfrown> {
 }
 
 # --- Phase 2: Some basic conversations and reminiscing to establish a "baseline"
-# Player should be able to "run through" this a few times to collect background information.
-#       What is the *intent* here? Let that motivate the tone and character speech.
-#           They want the PC to believe they are actually their wife, but why?
-#       What is the motivation of Her and the PC?
 
 You still do that, you know. <face:neu_smile> {
     ?: Do what?
@@ -196,7 +192,7 @@ The view of the city, the port in the distance...
             ?: By the window.
                 @by_the_window
                 Of course! How else would we have that view? <face:soft_tgrin>
-                Why did you always want to sit there, anyway? <face:concern_tfrown> {
+                Why did you like sitting there, anyway? <face:concern_tfrown> {
                     ?: It was brighter. {
                         ?: That place always had dim lights- {
                             ?: -and I wanted to actually see the menu.
@@ -223,7 +219,7 @@ The view of the city, the port in the distance...
                 Like you didn't care.
                 But you'd still hesitate, <face:devious_tgrin>
                 and pick somewhere that felt right.
-                That was just your personality, <face:neu_bgrin>
+                That was just your personality; <face:neu_bgrin>
                 Like... <face:neu_smile>
                 Remember-
                 -> house
@@ -277,6 +273,7 @@ Like you always did. <face:neu_smile> {
         You remember.
         I know you do.
 }
+...
 I miss that place. <face:concern_tfrown>
 Or maybe just how it felt.
 # Launching into house recollection, branches based on established info from earlier...
@@ -285,7 +282,7 @@ Or maybe just how it felt.
         I loved how the morning light would come in. <face:clo_grin>
         It brought our whole world to life.
         Especially you, 
-        You would never close the blinds.
+        you would never close the blinds.
         Then each morning you'd spring up with the sun.
         That certainly made me a more lively person too...
         I could sleep for days,
@@ -309,14 +306,14 @@ Yeah, haha. <face:clo_grin>
 It all blurred together after a while, <face:neu_smile>
 but I remember the order of it.
 Wake up,
-You would take your time getting ready-
+you would take your time getting ready-
 as always-
 then out the door...
 [match:cafe_mentioned]
     =true
         towards the café.
         Didn't even have to think about it.
-        Felt like a continuation of our world,
+        It felt like a continuation of our world,
         like we never left the house. {
             ?: That doesn't sound right...
                 What? <face:neu_surprise>
@@ -386,7 +383,7 @@ then out the door...
             ?: (Say nothing)
         }
     =false
-        Then we were off! <face:cdev_grin>
+        And we were off! <face:cdev_grin>
         Didn't really matter where. <face:clo_bfrown>
         Though,
         you always made it feel like it did. <face:concern_smile>
@@ -398,9 +395,9 @@ That was the nice part.
 Although... <face:soft_tgrin>
 Didn't start that way, haha. 
 Remember the first few nights?
-Nothing was really unpacked yet,
+Nothing was really organized yet,
 just enough to pretend that we were settled.
-Those boxes sat by the door for days!
+We had boxes sitting by the door for days!
 [match:house_confronted]
     =true
         Not a thing was unpacked until you knew exactly where you wanted it. <face:devious_tgrin> {
