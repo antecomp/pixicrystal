@@ -10,7 +10,7 @@ Have you used a conduit before? {
     ?: No
     # change this out for whatever
     ?: Yes, Debug
-        -> whynotearlier
+        -> debug
 }
 
 Before establishing communication, know of these ground rules:
@@ -181,6 +181,7 @@ Made all our days more vivid. <face:soft_tgrin>
 ... <face:neu_concern>
 Especially at-
 ...
+@debug
 We would always go to that one place... {
     ?: The café?
         The café... <face:concern_surprise> <signal:set_cafe_mentioned>
@@ -206,11 +207,6 @@ The view of the city, the port in the distance...
                 @by_the_window
                 Of course! How else would we have that view? <face:soft_tgrin>
                 Why did you always want to sit there, anyway? <face:concern_tfrown> {
-                    ?: I did it for you.
-                        Aw... <face:clo_grin>
-                        You were always so thoughtful. <face:clo_smile>
-                        Like with- <face:clo_sopen>
-                        -> house
                     ?: It was brighter. {
                         ?: That place always had dim lights- {
                             ?: -and I wanted to actually see the menu.
@@ -225,6 +221,11 @@ The view of the city, the port in the distance...
                                 -> house
                         }
                     }
+                    ?: I did it for you.
+                        Aw... <face:clo_grin>
+                        You were always so thoughtful. <face:clo_smile>
+                        Like with- <face:clo_sopen>
+                        -> house
                 }
             ?: Wherever we could.
                 Sure. <face:neu_grin>
@@ -268,10 +269,10 @@ The view of the city, the port in the distance...
 
 
 @house
-The house. <face:neu_surprise>
+The house. <face:neu_smile>
 ...
 # Contradicting with the earlier city/port setting of cafe...?
-The one by the lake,
+The one by the lake, <face:neu_surprise>
 You took your time deciding on that one...
 Like you always did. <face:neu_smile> {
     ?: I had that one before I met you.
@@ -287,13 +288,7 @@ Like you always did. <face:neu_smile> {
         I know you do.
 }
 I miss that place. <face:concern_tfrown>
-Or maybe just how it felt. {
-    ?: I do too.
-    ?: Is that all that's left for you?
-        Please don't. <face:soft_tfrown>
-        Don't make me answer that.
-        -> gameover
-}
+Or maybe just how it felt.
 # Launching into house recollection, branches based on established info from earlier...
 [match:window_reason_given]
     =true
@@ -420,18 +415,19 @@ Those boxes sat by the door for days!
     =true
         Not a thing was unpacked until you knew exactly where you wanted it. <face:devious_tgrin> {
             ?: You're mixing it up again...
-                Please...
+                I... <face:concern_surprise>
                 Maybe I am.
                 ...
-                Things don't stay where I leave them anymore.
+                Things don't stay where I leave them anymore. <face:concern_sfrown>
                 ...
                 Maybe that is why I keep holding them here.
                 The places, the order of it.
                 If I let go,
                 everything runs together again.
-                Please,
-                stay a little longer.
-                Help me keep it in one piece.
+                ... <face:soft_frown>
+                Please...
+                I need you to stay a little longer.
+                Help me keep it in one piece. 
                 -> sculpt_alt_end
             ?: (Say nothing)
         }
@@ -505,14 +501,14 @@ Hey, you know... <face:concern_smile>
 
 [block:sculpt_end]
     ENDING 3A: SCULPTURES <signal:ending> <face:error> {
-        ?: Play again?
+        ?: Try again
             -> intro
     }
 [/block]
 
 [block:sculpt_alt_end]
     ENDING 3B: SCULPTURES <signal:ending> <face:error> {
-        ?: Play again?
+        ?: Try again
             -> intro
     }
 [/block]
@@ -551,7 +547,7 @@ Hey, you know... <face:concern_smile>
     Everything feels so worn down.
     I am sorry this is all that's left of me. <face:soft_frown>
     ENDING 2: FRAGMENTS <signal:ending> <face:error> {
-        ?: Play again?
+        ?: Try again
             -> intro
     }
 [/block]
