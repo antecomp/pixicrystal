@@ -167,75 +167,84 @@ Especially at-
 ...
 We would always go to that one place... {
     ?: The café?
-        # SIGNAL:  cafe_mentioned
-        The café... <face:concern_surprise>
+        The café... <face:concern_surprise> <signal:set_cafe_mentioned>
         Yeah. <face:clo_smile>
         That sounds right.
     ?: I don't recall a place like that.
-        # SIGNAL: Place unknown?
         Really? <face:concern_sfrown>
         ...
         That's strange.
         We went there all the time.
     ?: We went to a lot of places.
-        # SIGNAL: Place vague
         Yeah, we did. <face:clo_smile>
         But this place more than anywhere else.
 }
- # TODO IF CAFE: Player says "I dont think we should talk about this place..." (maybe she died here, a path to breaking one of the rules?)
 ...
 I can still picture it. <face:clo_grin>
 The view of the city, the port in the distance...
 ...
-We always sat at the same spot, right? {
-    ?: By the window.
-        # SIGNAL: Known that we sit by the window.
-        Heh, right.
-        Of course, how else would we have that view?
-        Why did you always want to sit there, anyway? {
-            ?: I did it for you.
-                # SIGNAL: Vague, just not in a lame "idk" way -- she gains no insight about you from this.
-                Aw...
-                You were always so thoughtful.
-                # TODO: rewrite below - trying to link back to indecisiveness desc above. 
-                I imagine your procrastination was for me too.
-                Like with-
-                -> house
-            ?: It was brighter. {
-                ?: That place always had dim lights- {
-                    ?: -and I wanted to actually see the menu.
-                        # SIGNAL: By the window and why.
-                        # TODO: Workshop this?
-                        Haha, right!
-                        The light seemed to make you less tense.
-                        You always needed to see things clearly.
-                        Even when it was just picking what to eat!
-                        ...
-                        Nothing with you ever felt careless.
-                        Like-
+[match:cafe_mentioned]
+    =true
+        We always sat at the same spot, right? {
+            ?: By the window.
+                @by_the_window
+                Heh, right.
+                Of course, how else would we have that view?
+                Why did you always want to sit there, anyway? {
+                    ?: I did it for you.
+                        Aw...
+                        You were always so thoughtful.
+                        Like with-
                         -> house
+                    ?: It was brighter. {
+                        ?: That place always had dim lights- {
+                            ?: -and I wanted to actually see the menu.
+                                # SIGNAL: By the window and why.
+                               Haha, right!
+                               The light did seem to make you less tense.
+                               Like things bothered you more when they were half-seen.
+                               Even there,
+                               With something a small as lunch.
+                                ...
+                                Nothing with you ever felt careless.
+                                Like-
+                                -> house
+                        }
+                    }
                 }
-            }
+            ?: Wherever we could.
+                    Yeah, that place was always busy.
+                # TODO: (Transition Line for house Here. This is now in the context of cafe known.)
+                -> house
+            ?: I don't think we should talk about that place.
+                That's unlike you.
+                You never avoided it before.
+                ...
+                Did something happen there? {
+                    ?: Can we please talk about something else.
+                        But why-
+                        Oh.
+                        That's right...
+                        That's where-
+                        -> gameover
+                }
         }
-    ?: Wherever we could.
-        # Have this stupid line because my parser
-        # doesnt work for ?: -> match ( even through it should >:( )
-        Wherever...
-        [match:cafe_mentioned]
-            =true
-                Yeah, that place was always busy.
-            =false
-                No... that's not right.
+    =false
+        We always sat at the same spot, right? {
+            ?: By the window?
+                -> by_the_window
+            ?: Wherever we could
+                 No... that's not right.
                 Do you know where I am talking about? {
                     ?: Not really.
                 }
                 That's alright.
                 At least one of us remembers.
-        [/match]
-        # SIGNAL: Window vague.
-        # TODO: (Transition Line for house Here)
-        -> house
-}
+                # TODO: Transition line to the house. This is now in context of cafe unknown.
+                -> house
+        }
+[/match]
+
 
 
 # -- Phase 3: Rebuilding. Established behaviors from above inform how she recalls this next memory.
@@ -256,34 +265,21 @@ The one by the lake,
 You took your time deciding on that one...
 Like you always did. {
     ?: I had that one before I met you.
-        Oh.
+        Oh. <signal:set_house_confronted>
         That doesn't-
         ...
         It felt like ours.
         That is how I remember it.
         # Make this option key to unlocking confrontation?
     ?: (Say Nothing)
-        # TODO: More?
         ... <face:neu_smile>
+        You remember.
+        I know you do.
 }
 I miss that place.
 Or maybe just how it felt.
-# Lead into memory recollection here...
-# Traits to go off of:
-# - Café (exists): Maybe mentioning the houses proximity to it?
-# - Café window: Office had a window?
-# - Café window reason (light): Office window reason would match.
-# - The above knowledge of the house location: General point of contention later.
-# - Optional bonus: "I don't drink" informing if there was a bar in or near the house, or similar?
-
-# Do we catch the inconsistencies during recollection, building tension? Or do we instead have a hash "something isn't right"
-# dialogue option unlocked?
-
+# Launching into house recollection, branches based on established info from earlier...
 [match:window_reason_given]
-    # Describing the place as bright and lively vs dark and cozy.
-        # For dark maybe describe that PC liked the quiet times
-        # While a believable link to "needing time to think" - it does not accurately reflect what we know.
-    # Both positive recollections, just one is incorrect.
     =true
         I loved how the morning light would come in.
         It brought our whole world to life.
@@ -296,9 +292,6 @@ Or maybe just how it felt.
         Or to keep me going...
         ...
     =false
-        # Try to make this description less descriptive too
-        # Without any prompting, she essentially is making this all up.
-        # So naturally it does not have much detail flowing...
         It was... nice.
         Quiet, quaint.
         Always felt like somewhere you could stay
@@ -309,7 +302,6 @@ We fell into a routine pretty quickly,
 didn't we? {
     ?: Like clockwork
 }
-# I think it might actually be cool to make the cafe a "bad" option
 # The cafe was NOT near this house, but she will fasely put these two memories together.
 Yeah, haha.
 It all blurred together after a while,
@@ -362,11 +354,16 @@ then out the door...
                                                 Yeah, sorry.
                                                 I can remember it your way.
                                                 I can move the café wherever you want it.
-                                                ...
-                                                Can we keep talking about something else?
-                                                # TODO: Transition into a version of the sculptures ending. 
-                                                # Doesn't have to match the text of the ending block
-                                                # If something else would read better.
+                                                If that makes this easier.
+                                                If that keeps you here.
+                                                Can we keep talking about something else? {
+                                                    ?: Of course.
+                                                        Thank you.
+                                                        I'm really glad we can talk again, you know.
+                                                        I feel more like myself, now.
+                                                        I hope you can stay a while longer...
+                                                        # TODO: Soft parallel to "false" ending that matches this tone better.
+                                                }
                                         }
                                     }
                                 }
@@ -385,19 +382,30 @@ Like we had already figured it out.
 Didn't have to think about anything.
 ...
 That was the nice part.
-# TODO: One more memory, this one only will show if we do not enter the confrontation...
-# Moving memory?
-# "I remember bringing boxes in..."
-# The idea is still that he owned this house before her
-# And she is blending memories of her limited stay with him there
-# With memories of other places they have lived...
-# Have this memory be the natural closure before the "follow" ending.
-# How do I nicely transition here?
+Although...
+Didn't start that way, haha.
+Remember the first few nights?
+Nothing was really unpacked yet,
+just enough to pretend that we were settled.
+Those boxes sat by the door for days!
+[match:house_confronted]
+    =true
+        Not a thing was unpacked until you knew exactly where you wanted it. {
+            # TODO: This is kinda wordy, is there a more elegant solution.
+            ?: Are you talking about the house we moved to together?
+                # TODO: Workshop.
+                Please...
+                I just-
+                ...
+                Yeah, probably.
+            ?: (Say nothing)
+        }
+    =false
+        Not a thing was unpacked until you knew exactly where you wanted it.
+[/match]
+# TODO: How to I softly close up this little memory and move into the sculptures ending?
 
-# --- Phase 4 Final Confrontation, True Ending or False Ending
- # I think these responses are too harsh right now. 
-# Should give more uncertainty than anger.
-# Confrontation ending
+# Confrontation, leads to true ending.
 [block:confront]
     Why would you ask me that? <face:anger_sfrown> {
         ?: Please, just tell  me what your name is.
@@ -413,11 +421,13 @@ That was the nice part.
                 =no
                     Is this some sort of joke? <face:anger_grimace> {
                         ?: Just tell me what your name is.
-                            # TODO: Maybe something more descriptive here.
-                            # Make it very clear that she truly does not know.
-                            No, not until you explain what is going on here! {
+                                It's...
+                                ...
+                                I should-
+                                ...
+                                I should know... {
                                 ?: This keeps happening. 
-                                    What keeps happening? {
+                                    What are you talking about? {
                                         ?: The lakehouse, the café. {
                                             ?: Places that never belonged together. {
                                                 ?: You keep folding them into one memory. {
@@ -429,17 +439,11 @@ That was the nice part.
                                     }
                             }
                     }
-            # Follow-up by asking for *your* name. Cannot be answered.
-            # Branch above is more just to teach the mechanic than to divert dialogue much...
-            # I don't remember your name. But I remember you.
-            # (Launch into soft unwind to explain what is happening)
             [/match]
     }
 [/block]
 
-# Ending block, where you played along and fed into the memories.
-# "Stay a little longer."
-# "Help me remember the rest."
+# Ending where you played into the delirium more...
 [block:ending_lie]
     It's been really nice talking to you.
     I feel more like myself, now.
@@ -463,10 +467,8 @@ That was the nice part.
 [/block]
 
 [block:ending_truth]
-    # TODO; This first line feels too blunt, like a "you win"
-    # Not an emotional defeat. Change it.
-    Fine-
-    Look, I don't remember your name.
+    ...
+    I don't remember your name.
     But I remember... you.
     I remember how you made me feel.
     It's just-
@@ -475,8 +477,7 @@ That was the nice part.
     ...
     I have been playing these moments back for so long.
     Over and over.
-    # TODO: Is this line too explicit to what is happening?
-    Everything has lost its clarity...
+    None of it stays where it belongs anymore.
     Places keep folding into each other.
     Mornings into nights.
     Houses into cafés.
