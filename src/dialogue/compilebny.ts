@@ -12,13 +12,20 @@ import { DialogueVisitor } from "./visitor";
 const parser = new DialogueParser();
 const visitor = new DialogueVisitor();
 
+function normalizeSource(input: string) {
+  return input
+    .replace(/\r\n/g, "\n") // Windows -> Unix
+    .replace(/\r/g, "\n")  // old Mac -> Unix
+    .trim()
+}
+
 export function compileBnyDialogue(raw: string, debug = false): DialogueNode | null {
     resetIdCounter();
 
     const begin = performance.now();
     console.log("𑣲₍ ᐢ. .ᐢ₎ : Compiling .bny dialogue...");
 
-    const lexResult = DialogueLexer.tokenize(raw.trim());
+    const lexResult = DialogueLexer.tokenize(normalizeSource(raw));
     if (lexResult.errors.length > 0) {
         console.error("Lex errors:", lexResult.errors);
         return null;
