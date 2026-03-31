@@ -1,7 +1,11 @@
-# Crystal (Working Title)
+# The Conduit
 A short custom-built visual novel created for the Agora Road "Demo Disc Jam"
+Written in TypeScript using PixiJS, Chevrotain, Vite & Tauri.
 
-Made using PixiJS, Vite & Tauri.
+## Credits
+Character art was created using https://picrew.me/en/image_maker/2056087
+
+-------------------------------------------------------
 
 # The BunNarraY Dialogue Language 𑣲₍ ᐢ. .ᐢ₎
 Because I am utterly insane I took this as an opportunity to create my own custom dialogue language parser using [chevrotain](https://chevrotain.io/docs/).
